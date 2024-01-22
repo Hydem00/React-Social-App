@@ -1,0 +1,29 @@
+.post {
+  @apply w-1/2 min-h-min rounded-lg text-white mt-10 shadow-custom-xl;
+
+  &__author {
+    @apply flex p-2;
+    &-name {
+      @apply ml-2 font-semibold;
+    }
+  }
+
+  &__profile-icon {
+    @apply w-12;
+  }
+
+  &__text {
+    @apply ml-16 pb-4;
+  }
+
+  &__img {
+    // @apply rounded-b-lg;
+    &-wrapper {
+      // @apply rounded-lg;
+    }
+  }
+
+  &__social-btns {
+    @apply flex justify-evenly p-2;
+  }
+}
