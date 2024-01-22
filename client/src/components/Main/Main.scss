@@ -1,0 +1,6 @@
+.main {
+  @apply bg-[#1f2937] w-full min-h-screen;
+  &__posts {
+    @apply flex justify-center;
+  }
+}
