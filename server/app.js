@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
-
+const connectToDb = require("./utils/db");
+const post = require("./routes/post");
 const rateLimit = require("express-rate-limit");
 
 const app = express();
@@ -18,5 +19,6 @@ var corsOptions = {
     optionsSuccessStatus: 200,
 };
 
+app.use("/api/posts", cors(corsOptions), post);
 
 module.exports = { app };
