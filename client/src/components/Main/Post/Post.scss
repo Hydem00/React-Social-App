@@ -1,5 +1,28 @@
 .post {
-  @apply w-1/2 min-h-min rounded-lg text-white mt-10 shadow-custom-xl;
+  @apply text-white border-y border-[#2F3336];
+
+  .new-post {
+    @apply relative mb-4 border-b-1 border-[#2E3235];
+
+    &__text {
+      @apply block text-xl leading-7 w-4/5 h-auto py-2 mt-4 placeholder:text-gray-900 shadow-sm outline-none placeholder:text-gray-400 focus:ring-0 px-3 placeholder:text-xl ml-auto bg-[#030712] overflow-hidden resize-none border-b-1 border-[#2E3235];
+    }
+    &__actions {
+      @apply flex items-center w-4/5 ml-auto p-2;
+    }
+    &__image-upload,
+    &__emoji-picker,
+    &__bullet-list,
+    &__numbered-list {
+      @apply ml-3 text-2xl hover:text-[#1E9BF0] cursor-pointer;
+    }
+    &__submit-post {
+      @apply ml-auto bg-[#1E9BF0] py-3 px-8 rounded-[25px];
+    }
+    .emoji-picker {
+      @apply absolute top-[90%] left-[25%];
+    }
+  }
 
   &__author {
     @apply flex p-2;
@@ -13,14 +36,13 @@
   }
 
   &__text {
-    @apply ml-16 pb-4;
+    @apply ml-16 pb-4 text-base;
   }
 
   &__img {
-    // @apply rounded-b-lg;
-    &-wrapper {
-      // @apply rounded-lg;
-    }
+    @apply rounded-lg w-3/4 mx-auto rounded-[25px];
+    // &-wrapper {
+    // }
   }
 
   &__social-btns {
