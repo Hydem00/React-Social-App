@@ -4,9 +4,11 @@ import "./App.scss";
 
 function App() {
   return (
-    <div className="App wrapper">
-      <Header />
-      <Main />
+    <div className="App">
+      <div className="wrapper">
+        <Header />
+        <Main />
+      </div>
     </div>
   );
 }
