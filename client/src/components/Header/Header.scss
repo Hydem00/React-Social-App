@@ -1,16 +1,27 @@
 .header {
-  @apply min-h-screen w-44 bg-[#030712] text-white;
+  @apply min-h-screen w-60 pr-4 border-r border-[#2F3336] bg-[#030712] text-white;
 }
 
 .nav-header {
-  @apply w-max flex justify-center;
+  @apply w-max mt-8 flex justify-center;
   &__list {
     @apply min-h-screen flex flex-col sm:text-lg md:text-xl;
   }
   &__item {
     @apply relative flex items-center px-4 py-5 cursor-pointer;
     &--toBottom {
-      @apply mt-auto mb-2;
+      @apply mt-auto mb-16;
+    }
+    &::before {
+      content: "";
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      @apply w-4 h-full translate-x-[-100%] bg-[#030712] z-10;
+    }
+    &-textBtn {
+      @apply bg-[#1E9BF0] py-3 px-8 rounded-[25px];
     }
     &-band {
       @apply duration-200 absolute w-2 h-1/2 top-0 left-0 transform translate-x-[-110%] translate-y-1/2;

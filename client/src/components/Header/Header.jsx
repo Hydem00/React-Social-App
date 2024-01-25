@@ -38,6 +38,9 @@ const Header = () => {
               Chat
             </span>
           </li>
+          <li className="nav-header__item group">
+            <button className="nav-header__item-textBtn">Publish entry</button>
+          </li>
           <li className="nav-header__item nav-header__item--toBottom group">
             <div className="nav-header__item-band nav-header__item-band--gray nav-header__item-band--move"></div>
             <CgProfile className="nav-header__item-icon nav-header__item-icon--gray" />
