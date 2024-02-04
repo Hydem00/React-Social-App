@@ -13,16 +13,10 @@ import {
 import EmojiPicker from "emoji-picker-react";
 
 const Post = () => {
-  const textareaRef = useRef(null);
   const [newPostText, setNewPostText] = useState("");
   const [isEmojiPickerActive, setIsEmojiPickerActive] = useState(false);
-
-  const textareaAutoResize = () => {
-    textareaRef.current.addEventListener("input", function () {
-      this.style.height = "auto";
-      this.style.height = this.scrollHeight + "px";
-    });
-  };
+  const [listNumber, setListNumber] = useState(1);
+  const textareaRef = useRef(null);
 
   const handleNewPostText = (event) => {
     setNewPostText(event.target.value);
@@ -52,9 +46,32 @@ const Post = () => {
     setNewPostText((prevState) => prevState + emojiData.emoji);
   };
 
+  const handleBulletList = () => {
+    setNewPostText((prevState) => prevState + `\n• `);
+  };
+
+  const handleNumberList = () => {
+    setNewPostText((prevState) => prevState + `\n${listNumber}. `);
+    setListNumber((prevNumber) => prevNumber + 1);
+  };
+
   useEffect(() => {
-    textareaAutoResize();
-  }, [textareaRef]);
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const resizeTextarea = () => {
+      textarea.style.height = "auto";
+      textarea.style.height = textarea.scrollHeight + "px";
+    };
+
+    resizeTextarea();
+
+    textarea.addEventListener("input", resizeTextarea);
+
+    return () => {
+      textarea.removeEventListener("input", resizeTextarea);
+    };
+  }, [newPostText]);
 
   return (
     <div className="post">
@@ -98,8 +115,14 @@ const Post = () => {
               </div>
             )}
           </div>
-          <MdOutlineFormatListBulleted className="new-post__bullet-list" />
-          <MdOutlineFormatListNumbered className="new-post__numbered-list" />
+          <MdOutlineFormatListBulleted
+            onClick={handleBulletList}
+            className="new-post__bullet-list"
+          />
+          <MdOutlineFormatListNumbered
+            onClick={handleNumberList}
+            className="new-post__numbered-list"
+          />
           <button className="new-post__submit-post">Publish entry</button>
         </div>
       </div>
@@ -121,10 +144,21 @@ const Post = () => {
         <img className="post__img" src={exampleImg} alt="" />
       </div>
       <div className="post__social-btns">
-        <FaRegHeart />
-        <FaRegComment />
-        <FaShare />
-        <IoStatsChartSharp />
+        <div className="post__social-btn-wrapper">
+          <FaRegHeart className="btn-heart" />
+          <span className="post__social--space">0</span>
+        </div>
+        <div className="post__social-btn-wrapper">
+          <FaRegComment className="btn-comment" />
+          <span className="post__social--space">0</span>
+        </div>
+        <div className="post__social-btn-wrapper">
+          <FaShare className="btn-share" />
+        </div>
+        <div className="post__social-btn-wrapper">
+          <IoStatsChartSharp className="btn-stats" />
+          <span className="post__social--space">0</span>
+        </div>
       </div>
     </div>
   );

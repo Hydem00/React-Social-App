@@ -45,7 +45,37 @@
     // }
   }
 
+  &__social-btn-wrapper {
+    @apply flex items-center;
+  }
+
   &__social-btns {
     @apply flex justify-evenly p-2;
+    .btn-heart,
+    .btn-comment,
+    .btn-share,
+    .btn-stats {
+      @apply hover:transform hover:scale-125 cursor-pointer transition duration-200;
+    }
+
+    .btn-heart {
+      @apply hover:text-red-600;
+    }
+
+    .btn-comment {
+      @apply hover:text-yellow-600;
+    }
+
+    .btn-share {
+      @apply hover:text-blue-600;
+    }
+
+    .btn-stats {
+      @apply hover:text-green-600;
+    }
+  }
+
+  &__social--space {
+    @apply ml-2;
   }
 }
