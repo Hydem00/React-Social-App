@@ -1,0 +1,84 @@
+.header {
+  @apply min-h-screen w-60 pr-4 border-r border-[#2F3336] bg-[#030712] text-white;
+}
+
+.nav-header {
+  @apply w-max mt-8 flex justify-center;
+  &__list {
+    @apply min-h-screen flex flex-col sm:text-lg md:text-xl;
+  }
+  &__item {
+    @apply relative flex items-center px-4 py-5 cursor-pointer;
+    &--toBottom {
+      @apply mt-auto mb-16;
+    }
+    &::before {
+      content: "";
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      @apply w-4 h-full translate-x-[-100%] bg-[#030712] z-10;
+    }
+    &-textBtn {
+      @apply bg-[#1E9BF0] py-3 px-8 rounded-[25px];
+    }
+    &-band {
+      @apply duration-200 absolute w-2 h-1/2 top-0 left-0 transform translate-x-[-110%] translate-y-1/2;
+      &--blue {
+        @apply bg-[#0ea5e9];
+      }
+      &--green {
+        @apply bg-green-500;
+      }
+      &--yellow {
+        @apply bg-yellow-500;
+      }
+      &--orange {
+        @apply bg-[#fb923c];
+      }
+      &--gray {
+        @apply bg-gray-400;
+      }
+      &--move {
+        @apply group-hover:translate-x-0;
+      }
+    }
+    &-icon {
+      @apply duration-200 mr-2;
+      &--blue {
+        @apply group-hover:text-[#0ea5e9];
+      }
+      &--green {
+        @apply group-hover:text-green-500;
+      }
+      &--yellow {
+        @apply group-hover:text-yellow-500;
+      }
+      &--orange {
+        @apply group-hover:text-[#fb923c];
+      }
+      &--gray {
+        @apply group-hover:text-gray-400;
+      }
+    }
+    &-text {
+      @apply duration-200;
+      &--blue {
+        @apply group-hover:text-[#0ea5e9];
+      }
+      &--green {
+        @apply group-hover:text-green-500;
+      }
+      &--yellow {
+        @apply group-hover:text-yellow-500;
+      }
+      &--orange {
+        @apply group-hover:text-[#fb923c];
+      }
+      &--gray {
+        @apply group-hover:text-gray-400;
+      }
+    }
+  }
+}

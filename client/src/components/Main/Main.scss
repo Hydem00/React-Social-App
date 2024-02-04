@@ -1,0 +1,6 @@
+.main {
+  @apply flex items-start h-auto lg:w-8/12 xl:w-7/12 2xl:w-6/12 border-r border-[#2F3336] py-12 bg-[#030712];
+  &__posts {
+    @apply flex justify-center;
+  }
+}
