@@ -7,6 +7,9 @@ const auth = require("./routes/auth");
 const docs = require("./routes/docs");
 const rateLimit = require("express-rate-limit");
 
+const errorHandler = require("./utils/errorHandler");
+
+
 const app = express();
 
 connectToDb();
@@ -41,5 +44,7 @@ app.all('*', (req, res) => {
         message: `There is no such endpoint.`
     });
 });
+
+app.use(errorHandler);
 
 module.exports = { app };

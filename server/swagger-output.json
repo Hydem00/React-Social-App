@@ -3,7 +3,7 @@
   "info": {
     "version": "2.1.0",
     "title": "SOCIAL RESTAPI",
-    "description": "<b>/b>",
+    "description": "<b>Twitter clone</b>",
     "license": {
       "name": "MIT",
       "url": "https://spdx.org/licenses/MIT.html"
@@ -29,83 +29,17 @@
     }
   ],
   "paths": {
-    "/signup": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "User signup",
-        "description": "Endpoint for user registration.",
-        "responses": {
-          "201": {
-            "description": "Created"
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "username": {
-                    "example": "any"
-                  },
-                  "password": {
-                    "example": "any"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/login": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "User login",
-        "description": "Endpoint for user login.",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "username": {
-                    "example": "any"
-                  },
-                  "password": {
-                    "example": "any"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/me": {
+    "/": {
       "get": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "Get current user",
-        "description": "Endpoint to get the current logged-in user information.",
+        "description": "",
         "responses": {
-          "200": {
-            "description": "OK"
+          "default": {
+            "description": ""
           }
         }
       }
     },
-    "/tags": {
+    "/api/posts/tags": {
       "get": {
         "tags": [
           "Post"
@@ -119,23 +53,27 @@
         }
       }
     },
-    "/": {
+    "/api/posts/": {
       "get": {
         "tags": [
-          "User"
+          "Post"
         ],
-        "summary": "Get list of users",
-        "description": "Endpoint to retrieve all users.",
+        "summary": "Get all posts",
+        "description": "Endpoint to retrieve all posts.",
+        "parameters": [
+          {
+            "name": "tag",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -173,43 +111,9 @@
             }
           }
         }
-      },
-      "put": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Edit user details",
-        "description": "Endpoint to edit the details of a user.",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "fullname": {
-                    "example": "any"
-                  },
-                  "bio": {
-                    "example": "any"
-                  }
-                }
-              }
-            }
-          }
-        }
       }
     },
-    "/search": {
+    "/api/posts/search": {
       "get": {
         "tags": [
           "Post"
@@ -239,7 +143,7 @@
         }
       }
     },
-    "/{id}": {
+    "/api/posts/{id}": {
       "get": {
         "tags": [
           "Post"
@@ -263,7 +167,7 @@
         }
       }
     },
-    "/{id}/togglelike": {
+    "/api/posts/{id}/togglelike": {
       "get": {
         "tags": [
           "Post"
@@ -293,7 +197,7 @@
         ]
       }
     },
-    "/{id}/toggleRetweet": {
+    "/api/posts/{id}/toggleRetweet": {
       "get": {
         "tags": [
           "Post"
@@ -323,7 +227,7 @@
         ]
       }
     },
-    "/{id}/comments": {
+    "/api/posts/{id}/comments": {
       "post": {
         "tags": [
           "Post"
@@ -367,7 +271,279 @@
         }
       }
     },
-    "/feed": {
+    "/api/auth/signup": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "User signup",
+        "description": "Endpoint for user registration.",
+        "responses": {
+          "201": {
+            "description": "User registration successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "JWT_TOKEN_HERE"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "JWT_TOKEN_HERE"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "Desired username for the new user account",
+                    "required": true
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "Desired password for the new user account",
+                    "required": true
+                  }
+                },
+                "required": [
+                  "username",
+                  "password"
+                ]
+              },
+              "examples": {
+                "example1": {
+                  "value": {
+                    "username": "newuser",
+                    "password": "newpassword123"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "User login",
+        "description": "Endpoint for user login.",
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "JWT_TOKEN_HERE"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "JWT_TOKEN_HERE"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing credentials or invalid login details"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "Username of the user",
+                    "required": true
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "Password of the user",
+                    "required": true
+                  }
+                },
+                "required": [
+                  "username",
+                  "password"
+                ]
+              },
+              "examples": {
+                "example1": {
+                  "value": {
+                    "username": "newuser",
+                    "password": "newpassword123"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Get current user",
+        "description": "Endpoint to get the current logged-in user information.",
+        "responses": {
+          "200": {
+            "description": "Information about the current user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get list of users",
+        "description": "Endpoint to retrieve all users.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Edit user details",
+        "description": "Endpoint to edit the details of a user.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fullname": {
+                    "example": "any"
+                  },
+                  "bio": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/feed": {
       "get": {
         "tags": [
           "User"
@@ -386,7 +562,7 @@
         ]
       }
     },
-    "/{username}": {
+    "/api/users/{username}": {
       "get": {
         "tags": [
           "User"
@@ -416,7 +592,7 @@
         ]
       }
     },
-    "/{id}/follow": {
+    "/api/users/{id}/follow": {
       "get": {
         "tags": [
           "User"
@@ -446,7 +622,7 @@
         ]
       }
     },
-    "/{id}/unfollow": {
+    "/api/users/{id}/unfollow": {
       "get": {
         "tags": [
           "User"
