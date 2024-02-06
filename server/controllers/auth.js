@@ -1,7 +1,12 @@
 const User = require("../models/User");
-const asyncHandler = require("../middlewares/asyncHandler");
+const asyncHandler = require("../utils/asyncHandler");
 
 exports.login = asyncHandler(async (req, res, next) => {
+    /*
+    #swagger.tags = ['Auth']
+    #swagger.summary = 'User login'
+    #swagger.description = 'Endpoint for user login.'
+    */
     const { username, password } = req.body;
 
     if (!username || !password) {
@@ -30,6 +35,11 @@ exports.login = asyncHandler(async (req, res, next) => {
 });
 
 exports.signup = asyncHandler(async (req, res, next) => {
+    /*
+    #swagger.tags = ['Auth']
+    #swagger.summary = 'User signup'
+    #swagger.description = 'Endpoint for user registration.'
+    */
     const { username, password } = req.body;
 
     const user = await User.create({ username, password });
@@ -39,6 +49,11 @@ exports.signup = asyncHandler(async (req, res, next) => {
 });
 
 exports.me = asyncHandler(async (req, res, next) => {
+    /*
+    #swagger.tags = ['Auth']
+    #swagger.summary = 'Get current user'
+    #swagger.description = 'Endpoint to get the current logged-in user information.'
+    */
     const { avatar, username, fullname, email, _id, website, bio } = req.user;
 
     res

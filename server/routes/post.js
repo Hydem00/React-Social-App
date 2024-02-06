@@ -10,7 +10,8 @@ const {
     getTags,
     toggleRetweet,
 } = require("../controllers/post");
-const { protect } = require("../middlewares/auth");
+const { protect } = require("../utils/protect");
+
 
 router.route("/tags").get(getTags);
 router.route("/").get(getPosts).post(protect, addPost);

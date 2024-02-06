@@ -2,18 +2,26 @@ const mongoose = require("mongoose");
 const Post = require("../models/Post");
 const User = require("../models/User");
 const Comment = require("../models/Comment");
-const asyncHandler = require("../middlewares/asyncHandler");
+const asyncHandler = require("../utils/asyncHandler");
 
 
 exports.getTags = asyncHandler(async (req, res, next) => {
-
+    /*
+    #swagger.tags = ['Post']
+    #swagger.summary = 'Get all tags'
+    #swagger.description = 'Endpoint to retrieve all tags used in posts.'
+    */
     const tags = await Post.find().distinct('tags');
     res.status(200).json({ success: true, data: tags });
 
 })
 
 exports.getPosts = asyncHandler(async (req, res, next) => {
-
+    /*
+        #swagger.tags = ['Post']
+        #swagger.summary = 'Get all posts'
+        #swagger.description = 'Endpoint to retrieve all posts.'
+    */
     var query = {}
     query.tags = { "$in": [req.query.tag] };
 
@@ -28,6 +36,11 @@ exports.getPosts = asyncHandler(async (req, res, next) => {
 
 
 exports.getPost = asyncHandler(async (req, res, next) => {
+    /*
+        #swagger.tags = ['Post']
+        #swagger.summary = 'Get a post'
+        #swagger.description = 'Endpoint to retrieve a post.'
+    */
     const post = await Post.findById(req.params.id)
         .populate({
             path: "comments",
@@ -74,6 +87,12 @@ exports.getPost = asyncHandler(async (req, res, next) => {
 
 
 exports.addPost = asyncHandler(async (req, res, next) => {
+    /*
+    #swagger.tags = ['Post']
+    #swagger.summary = 'Create a post'
+    #swagger.description = 'Endpoint to add a new post.'
+    #swagger.security = [{ "bearerAuth": [] }]
+    */
     const { caption, files, tags } = req.body;
     const user = req.user.id;
 
@@ -92,6 +111,18 @@ exports.addPost = asyncHandler(async (req, res, next) => {
 });
 
 exports.toggleLike = asyncHandler(async (req, res, next) => {
+    /*
+    #swagger.tags = ['Post']
+    #swagger.summary = 'Toggle like on a post'
+    #swagger.description = 'Endpoint to like or unlike a post.'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.parameters['id'] = {
+        in: 'path',
+        description: 'ID of the post to like or unlike',
+        required: true
+    }
+    */
+
     // make sure that the post exists
     const post = await Post.findById(req.params.id);
 
@@ -117,7 +148,17 @@ exports.toggleLike = asyncHandler(async (req, res, next) => {
 });
 
 exports.toggleRetweet = asyncHandler(async (req, res, next) => {
-
+    /*
+    #swagger.tags = ['Post']
+    #swagger.summary = 'Toggle retweet on a post'
+    #swagger.description = 'Endpoint to retweet or unretweet a post.'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.parameters['id'] = {
+        in: 'path',
+        description: 'ID of the post to retweet or unretweet',
+        required: true
+    }
+    */
     const post = await Post.findById(req.params.id);
 
     if (!post) {
@@ -157,6 +198,17 @@ exports.toggleRetweet = asyncHandler(async (req, res, next) => {
 });
 
 exports.addComment = asyncHandler(async (req, res, next) => {
+    /*
+    #swagger.tags = ['Post']
+    #swagger.summary = 'Add a comment to a post'
+    #swagger.description = 'Endpoint to add a comment to a specific post.'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.parameters['id'] = {
+        in: 'path',
+        description: 'ID of the post to comment on',
+        required: true
+    }
+    */
     const post = await Post.findById(req.params.id);
 
     if (!post) {
@@ -184,6 +236,12 @@ exports.addComment = asyncHandler(async (req, res, next) => {
 });
 
 exports.searchPost = asyncHandler(async (req, res, next) => {
+    /*
+    #swagger.tags = ['Post']
+    #swagger.summary = 'Search posts'
+    #swagger.description = 'Endpoint to search posts based on criteria.'
+    */
+
     if (!req.query.caption && !req.query.tag) {
         return next({
             message: "Please enter either caption or tag to search for",
