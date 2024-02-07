@@ -126,11 +126,24 @@ exports.me = asyncHandler(async (req, res, next) => {
     #swagger.tags = ['Auth']
     #swagger.summary = 'Get current user'
     #swagger.description = 'Endpoint to get the current logged-in user information.'
-    #swagger.responses[200] = {
-        description: 'Information about the current user',
-        schema: {
-            success: true,
+    #swagger.security = [{ "bearerAuth": [] }]
+        #swagger.responses[200] = { 
+            description: 'List of followed users successfully retrieved.',
+            schema: { 
+                success: true, 
+                data: {
+                    $avatar: 'URL_to_avatar',
+                    $userxname: 'UserASDASDUsername',
+                    $fullname: 'User Fullname',
+                    $email: 'user@example.com',
+                    $_id: 'UserID',
+                    $website: 'http://userwebsite.com',
+                    $bio: 'User biography...'
+                }
+            }
         }
+    #swagger.responses[403] = { 
+        description: 'Unauthorized. Token missing or invalid.'
     }
     */
     const { avatar, username, fullname, email, _id, website, bio } = req.user;

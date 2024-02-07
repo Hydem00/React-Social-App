@@ -39,6 +39,16 @@
         }
       }
     },
+    "/api/avatar/default": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/posts/tags": {
       "get": {
         "tags": [
@@ -455,7 +465,7 @@
         "description": "Endpoint to get the current logged-in user information.",
         "responses": {
           "200": {
-            "description": "Information about the current user",
+            "description": "List of followed users successfully retrieved.",
             "content": {
               "application/json": {
                 "schema": {
@@ -464,6 +474,43 @@
                     "success": {
                       "type": "boolean",
                       "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "avatar": {
+                          "type": "string",
+                          "example": "URL_to_avatar"
+                        },
+                        "": {
+                          "type": "string",
+                          "example": "User  "
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "user@example.com"
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "UserID"
+                        },
+                        "website": {
+                          "type": "string",
+                          "example": "http://userwebsite.com"
+                        },
+                        "bio": {
+                          "type": "string",
+                          "example": "User biography..."
+                        }
+                      },
+                      "required": [
+                        "avatar",
+                        "",
+                        "email",
+                        "_id",
+                        "website",
+                        "bio"
+                      ]
                     }
                   },
                   "xml": {
@@ -478,6 +525,43 @@
                     "success": {
                       "type": "boolean",
                       "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "avatar": {
+                          "type": "string",
+                          "example": "URL_to_avatar"
+                        },
+                        "": {
+                          "type": "string",
+                          "example": "User  "
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "user@example.com"
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "UserID"
+                        },
+                        "website": {
+                          "type": "string",
+                          "example": "http://userwebsite.com"
+                        },
+                        "bio": {
+                          "type": "string",
+                          "example": "User biography..."
+                        }
+                      },
+                      "required": [
+                        "avatar",
+                        "",
+                        "email",
+                        "_id",
+                        "website",
+                        "bio"
+                      ]
                     }
                   },
                   "xml": {
@@ -486,8 +570,16 @@
                 }
               }
             }
+          },
+          "403": {
+            "description": "Unauthorized. Token missing or invalid."
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/users/": {
@@ -495,11 +587,97 @@
         "tags": [
           "User"
         ],
-        "summary": "Get list of users",
-        "description": "Endpoint to retrieve all users.",
+        "summary": "Get list of followed users",
+        "description": "Endpoint to retrieve all followed users.",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "List of followed users successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "_id": {
+                            "type": "string",
+                            "example": "user_id"
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "User Name"
+                          },
+                          "email": {
+                            "type": "string",
+                            "example": "user@example.com"
+                          },
+                          "isFollowing": {
+                            "type": "boolean",
+                            "example": true
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "_id": {
+                            "type": "string",
+                            "example": "user_id"
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "User Name"
+                          },
+                          "email": {
+                            "type": "string",
+                            "example": "user@example.com"
+                          },
+                          "isFollowing": {
+                            "type": "boolean",
+                            "example": true
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -584,12 +762,7 @@
           "200": {
             "description": "OK"
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/users/{id}/follow": {
@@ -655,9 +828,11 @@
   },
   "components": {
     "securitySchemes": {
-      "basicAuth": {
-        "type": "http",
-        "scheme": "basic"
+      "bearerAuth": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "Enter your JWT token as: Bearer <token>"
       }
     }
   }

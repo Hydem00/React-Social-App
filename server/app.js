@@ -37,6 +37,11 @@ app.get('/', (req, res) => {
     res.redirect('/api/docs');
 });
 
+app.use(express.static('public'));
+app.get('/api/avatar/default', (req, res) => {
+    res.sendFile('default_avatar.webp', { root: './public' });
+});
+
 // Wildcard route for handling 404 - Place this at the end
 app.all('*', (req, res) => {
     res.status(404).json({
@@ -46,5 +51,6 @@ app.all('*', (req, res) => {
 });
 
 app.use(errorHandler);
+
 
 module.exports = { app };

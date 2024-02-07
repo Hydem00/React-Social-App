@@ -39,9 +39,11 @@ const doc = {
 
     ],
     securityDefinitions: {
-        basicAuth: {
-            type: 'http',
-            scheme: 'basic'
+        bearerAuth: {
+            type: 'apiKey',
+            name: 'Authorization',
+            in: 'header',
+            description: 'Enter your JWT token as: Bearer <token>'
         },
     },
 }
