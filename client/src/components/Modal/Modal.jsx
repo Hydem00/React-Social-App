@@ -1,7 +1,10 @@
-import React from "react";
-import TextEditor from "../TextEditor/TextEditor";
+import React, { useContext } from "react";
+import TextEditor from "../Main/Post/TextEditor/TextEditor";
+import { StoreContext } from "../store/StoreProvider";
 
-const ModalAddPost = ({ isOpen, onClose }) => {
+const Modal = ({ isOpen, onClose }) => {
+  const { isPublishPostActive, isSearchActive } = useContext(StoreContext);
+
   return (
     <>
       <div
@@ -41,7 +44,9 @@ const ModalAddPost = ({ isOpen, onClose }) => {
               </button>
             </div>
             <div className="p-4 md:p-5 space-y-4">
-              <TextEditor buttonText="Publish" isModal={true} />
+              {isPublishPostActive && (
+                <TextEditor buttonText="Publish" isModal={true} />
+              )}
             </div>
           </div>
         </div>
@@ -50,4 +55,4 @@ const ModalAddPost = ({ isOpen, onClose }) => {
   );
 };
 
-export default ModalAddPost;
+export default Modal;
