@@ -96,59 +96,66 @@ const TextEditor = ({ buttonText, placeholder, isModal }) => {
         name="new-post"
         maxLength={280}
         className={`text-editor__text ${
-          isModal ? "text-editor__text--modal" : ""
-        }`}
+          !isFocused ? "text-editor__text--blur" : ""
+        } ${isModal ? "text-editor__text--modal" : ""}`}
         placeholder={placeholder || "What's going on?!"}
       ></textarea>
+      {!isFocused && (
+        <button className="text-editor__submit-post text-editor__submit-post--blur">
+          {buttonText}
+        </button>
+      )}
       <img
         ref={previewImageRef}
         className="text-editor__img-preview"
         alt=""
         id="previewImage"
       />
-      <div
-        className={`text-editor__actions ${
-          isModal ? "text-editor__actions--modal" : ""
-        }`}
-      >
-        <MdInsertPhoto
-          onClick={() => fileInputRef.current && fileInputRef.current.click()}
-          className="text-editor__image-upload"
-        />
-        <input
-          ref={fileInputRef}
-          onChange={handleUploadImage}
-          className="hidden"
-          type="file"
-          id="img-upload"
-          name=""
-        />
-        <div className="text-editor__emoji-picker-container">
-          <MdOutlineEmojiEmotions
-            onClick={handleEmojiPicker}
-            className="text-editor__emoji-picker"
+      {isFocused && (
+        <div
+          className={`text-editor__actions ${
+            isModal ? "text-editor__actions--modal" : ""
+          }`}
+        >
+          <MdInsertPhoto
+            onClick={() => fileInputRef.current && fileInputRef.current.click()}
+            className="text-editor__image-upload"
           />
-          {isEmojiPickerActive && (
-            <div>
-              <EmojiPicker
-                onEmojiClick={onEmojiClick}
-                theme="dark"
-                className="emoji-picker"
-                emojiStyle="apple"
-              />
-            </div>
-          )}
+          <input
+            ref={fileInputRef}
+            onChange={handleUploadImage}
+            className="hidden"
+            type="file"
+            id="img-upload"
+            name=""
+          />
+          <div className="text-editor__emoji-picker-container">
+            <MdOutlineEmojiEmotions
+              onClick={handleEmojiPicker}
+              className="text-editor__emoji-picker"
+            />
+            {isEmojiPickerActive && (
+              <div>
+                <EmojiPicker
+                  onEmojiClick={onEmojiClick}
+                  theme="dark"
+                  className="emoji-picker"
+                  emojiStyle="apple"
+                />
+              </div>
+            )}
+          </div>
+          <MdOutlineFormatListBulleted
+            onClick={handleBulletList}
+            className="text-editor__bullet-list"
+          />
+          <MdOutlineFormatListNumbered
+            onClick={handleNumberList}
+            className="text-editor__numbered-list"
+          />
+          <button className="text-editor__submit-post">{buttonText}</button>
         </div>
-        <MdOutlineFormatListBulleted
-          onClick={handleBulletList}
-          className="text-editor__bullet-list"
-        />
-        <MdOutlineFormatListNumbered
-          onClick={handleNumberList}
-          className="text-editor__numbered-list"
-        />
-        <button className="text-editor__submit-post">{buttonText}</button>
-      </div>
+      )}
     </div>
   );
 };

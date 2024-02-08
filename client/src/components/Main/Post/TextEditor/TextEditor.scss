@@ -6,6 +6,9 @@
     &--modal {
       @apply w-full bg-black;
     }
+    &--blur {
+      @apply border-0;
+    }
   }
   &__actions {
     @apply flex items-center w-4/5 ml-auto p-2 text-white;
@@ -20,7 +23,10 @@
     @apply ml-3 text-2xl hover:text-[#1E9BF0] cursor-pointer;
   }
   &__submit-post {
-    @apply ml-auto bg-[#1E9BF0] py-3 px-8 rounded-[25px];
+    @apply ml-auto bg-[#1E9BF0] py-3 px-8 rounded-[25px] transition duration-300 hover:bg-[#D7DBDC] hover:text-black;
+    &--blur {
+      @apply absolute top-0 right-4 transform;
+    }
   }
   .emoji-picker {
     @apply absolute top-[100%] left-[25%];
