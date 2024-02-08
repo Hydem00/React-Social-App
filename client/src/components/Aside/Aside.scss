@@ -1,5 +1,9 @@
 .aside {
-  @apply w-4/12 mx-8 mt-8;
+  @apply relative w-4/12 mx-8 mt-8;
+
+  &__wrapper {
+    @apply fixed w-3/12;
+  }
 }
 
 .search {
@@ -43,7 +47,7 @@
     }
 
     &__name {
-      @apply mb-1 mx-3;
+      @apply mb-1 mx-3 font-bold;
     }
 
     &__follow-btn {
