@@ -33,27 +33,3 @@
     @apply text-white absolute end-2.5 bottom-2.5 bg-[#1E9BF0] hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800;
   }
 }
-
-.profiles {
-  @apply flex flex-wrap w-full rounded-lg overflow-hidden text-white bg-[#16181C];
-
-  &__title {
-    @apply w-full text-xl font-bold p-2;
-  }
-
-  .profile {
-    @apply w-full flex items-center;
-
-    &__icon {
-      @apply h-16 p-2;
-    }
-
-    &__name {
-      @apply mb-1 mx-3 font-bold;
-    }
-
-    &__follow-btn {
-      @include follow-btn;
-    }
-  }
-}

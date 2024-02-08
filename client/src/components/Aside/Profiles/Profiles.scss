@@ -1,0 +1,29 @@
+@import "../../mixins.scss";
+
+.profiles {
+  @apply flex flex-wrap w-full rounded-lg overflow-hidden text-white bg-[#16181C];
+
+  &__title {
+    @apply w-full text-xl font-bold p-2;
+  }
+
+  .profile {
+    @apply w-full flex items-center;
+
+    &__icon {
+      @apply h-16 p-2;
+    }
+
+    &__name {
+      @apply mb-1 mx-3 font-bold;
+    }
+
+    &__follow-btn {
+      @include follow-btn;
+    }
+
+    &__description {
+      @apply px-4 py-2;
+    }
+  }
+}
