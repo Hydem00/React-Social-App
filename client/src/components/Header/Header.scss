@@ -1,9 +1,9 @@
 .header {
-  @apply min-h-screen w-60 pr-4 border-r border-[#2F3336] bg-[#030712] text-white;
+  @apply min-h-screen relative w-72 pr-4 border-r border-[#2F3336] bg-[#030712] text-white;
 }
 
 .nav-header {
-  @apply w-max mt-8 flex justify-center;
+  @apply w-max fixed mt-8 flex justify-center;
   &__list {
     @apply min-h-screen flex flex-col sm:text-lg md:text-xl;
   }
