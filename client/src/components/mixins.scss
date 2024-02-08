@@ -1,3 +1,3 @@
 @mixin follow-btn() {
-  @apply bg-[#D7DBDC] rounded-[20px] px-6 py-2 text-black mb-1 ml-auto mr-4;
+  @apply bg-[#D7DBDC] rounded-[20px] px-6 py-2 text-black mb-1 ml-auto mr-4 transition duration-300 hover:bg-[#1E9BF0] hover:text-white;
 }

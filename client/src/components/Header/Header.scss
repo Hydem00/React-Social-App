@@ -21,7 +21,7 @@
       @apply w-4 h-full translate-x-[-100%] bg-[#030712] z-10;
     }
     &-textBtn {
-      @apply bg-[#1E9BF0] py-3 px-8 rounded-[25px];
+      @apply bg-[#1E9BF0] py-3 px-8 rounded-[25px] transition duration-300 hover:bg-[#D7DBDC] hover:text-black;
     }
     &-band {
       @apply duration-200 absolute w-2 h-1/2 top-0 left-0 transform translate-x-[-110%] translate-y-1/2;
