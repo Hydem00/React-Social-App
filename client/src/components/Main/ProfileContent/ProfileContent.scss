@@ -1,0 +1,55 @@
+@import "../../mixins.scss";
+
+.user-profile {
+  @apply flex items-end flex-wrap w-full text-white;
+  &__img {
+    @apply w-32 ml-8 mt-32;
+  }
+  &__follow-btn {
+    @include follow-btn;
+  }
+
+  &__info {
+    @apply w-full mt-6 ml-6;
+  }
+
+  &__name {
+    @apply font-bold text-xl;
+  }
+
+  &__description {
+    @apply mt-6;
+  }
+
+  &__follows-wrapper {
+    @apply flex justify-around my-4;
+  }
+
+  &__post-types {
+    @apply flex justify-around items-center m-3 text-gray-500;
+  }
+  &__post-type {
+    @apply relative text-xl transition duration-300 cursor-pointer;
+    &::after {
+      content: "";
+      display: block;
+      position: absolute;
+      height: 1px;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      transform: translateX(-110%);
+      opacity: 0;
+      background-color: #1e9bf0;
+    }
+
+    &--active {
+      @apply text-[#1E9BF0];
+      &::after {
+        transform: translateX(0%);
+        opacity: 1;
+        transition: 0.2s;
+      }
+    }
+  }
+}
