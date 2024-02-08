@@ -1,0 +1,32 @@
+.text-editor {
+  @apply relative mb-4 border-b-1 border-[#2E3235];
+
+  &__text {
+    @apply block text-xl text-white leading-7 w-4/5 h-auto py-2 mt-4 placeholder:text-gray-900 shadow-sm outline-none placeholder:text-gray-400 focus:ring-0 px-3 placeholder:text-xl ml-auto bg-[#030712] overflow-hidden resize-none border-b-1 border-[#2E3235];
+    &--modal {
+      @apply w-full bg-black;
+    }
+  }
+  &__actions {
+    @apply flex items-center w-4/5 ml-auto p-2 text-white;
+    &--modal {
+      @apply w-full;
+    }
+  }
+  &__image-upload,
+  &__emoji-picker,
+  &__bullet-list,
+  &__numbered-list {
+    @apply ml-3 text-2xl hover:text-[#1E9BF0] cursor-pointer;
+  }
+  &__submit-post {
+    @apply ml-auto bg-[#1E9BF0] py-3 px-8 rounded-[25px];
+  }
+  .emoji-picker {
+    @apply absolute top-[100%] left-[25%];
+  }
+
+  &__img-preview {
+    @apply mx-auto;
+  }
+}
