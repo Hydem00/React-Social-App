@@ -1,0 +1,18 @@
+.comment {
+  @apply border-t border-[#2F3336];
+
+  &__author {
+    @apply flex p-4 mt-4;
+    &-name {
+      @apply ml-2 font-semibold;
+    }
+  }
+
+  &__profile-icon {
+    @apply w-12;
+  }
+
+  &__text {
+    @apply ml-16 pb-4 text-base px-2;
+  }
+}
