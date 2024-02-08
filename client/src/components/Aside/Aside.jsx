@@ -1,6 +1,6 @@
 import React from "react";
-import profileUser from "../../assets/profile-user.png";
 import "./Aside.scss";
+import Profiles from "./Profiles/Profiles";
 
 const Aside = () => {
   return (
@@ -41,16 +41,7 @@ const Aside = () => {
           </div>
         </form>
 
-        <section className="profiles">
-          <h3 className="profiles__title">Profiles worth following</h3>
-          <div className="profile">
-            <img className="profile__icon" src={profileUser} alt="" />
-            <a className="profile__name" href="">
-              Lorem ipsum
-            </a>
-            <button className="profile__follow-btn">Follow</button>
-          </div>
-        </section>
+        <Profiles isAside={true} />
       </div>
     </aside>
   );
