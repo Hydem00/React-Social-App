@@ -1,11 +1,12 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./Header.scss";
 import { FaHome, FaBell } from "react-icons/fa";
 import { SlMagnifier } from "react-icons/sl";
 import { CgProfile } from "react-icons/cg";
 import { RiMessage2Fill } from "react-icons/ri";
 
-const Header = () => {
+const Header = ({ addPostModal }) => {
   return (
     <header className="header">
       <nav className="nav-header">
@@ -13,9 +14,12 @@ const Header = () => {
           <li className="nav-header__item group">
             <div className="nav-header__item-band nav-header__item-band--blue nav-header__item-band--move"></div>
             <FaHome className="nav-header__item-icon nav-header__item-icon--blue " />
-            <span className="nav-header__item-text nav-header__item-text--blue">
+            <Link
+              to="/"
+              className="nav-header__item-text nav-header__item-text--blue"
+            >
               Home
-            </span>
+            </Link>
           </li>
           <li className="nav-header__item group">
             <div className="nav-header__item-band nav-header__item-band--green nav-header__item-band--move"></div>
@@ -39,7 +43,14 @@ const Header = () => {
             </span>
           </li>
           <li className="nav-header__item group">
-            <button className="nav-header__item-textBtn">Publish entry</button>
+            <button
+              onClick={addPostModal}
+              className="nav-header__item-textBtn"
+              data-modal-target="medium-modal"
+              data-modal-toggle="medium-modal"
+            >
+              Publish entry
+            </button>
           </li>
           <li className="nav-header__item nav-header__item--toBottom group">
             <div className="nav-header__item-band nav-header__item-band--gray nav-header__item-band--move"></div>
