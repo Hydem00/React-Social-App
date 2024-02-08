@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import TextEditor from "../Main/Post/TextEditor/TextEditor";
 import { StoreContext } from "../store/StoreProvider";
+import SearchProfiles from "./SearchProfiles/SearchProfiles";
 
 const Modal = ({ isOpen, onClose }) => {
   const { isPublishPostActive, isSearchActive } = useContext(StoreContext);
@@ -47,6 +48,7 @@ const Modal = ({ isOpen, onClose }) => {
               {isPublishPostActive && (
                 <TextEditor buttonText="Publish" isModal={true} />
               )}
+              {isSearchActive && <SearchProfiles />}
             </div>
           </div>
         </div>
