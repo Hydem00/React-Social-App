@@ -79,18 +79,26 @@ const TextEditor = ({ buttonText, placeholder, isModal }) => {
 
     textarea.addEventListener("input", resizeTextarea);
 
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        handleBlur();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
     return () => {
       textarea.removeEventListener("input", resizeTextarea);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [newPostText]);
 
   return (
     <div className="text-editor">
       <textarea
-        onFocus={handleFocus}
-        onBlur={handleBlur}
         id="autoresize"
         onChange={handleNewPostText}
+        onFocus={handleFocus}
         value={newPostText}
         ref={textareaRef}
         name="new-post"
