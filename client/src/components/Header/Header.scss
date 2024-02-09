@@ -10,7 +10,7 @@
   &__item {
     @apply relative flex items-center px-4 py-5 cursor-pointer;
     &--toBottom {
-      @apply mt-auto mb-16;
+      @apply relative mt-auto mb-16;
     }
     &::before {
       content: "";
