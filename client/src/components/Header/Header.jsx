@@ -23,16 +23,16 @@ const Header = () => {
     <header className="header">
       <nav className="nav-header">
         <ul className="nav-header__list">
-          <li className="nav-header__item group">
-            <div className="nav-header__item-band nav-header__item-band--blue nav-header__item-band--move"></div>
-            <FaHome className="nav-header__item-icon nav-header__item-icon--blue " />
-            <Link
-              to="/"
-              className="nav-header__item-text nav-header__item-text--blue"
-            >
-              Home
-            </Link>
-          </li>
+          <Link to="/">
+            <li className="nav-header__item group">
+              <div className="nav-header__item-band nav-header__item-band--blue nav-header__item-band--move"></div>
+              <FaHome className="nav-header__item-icon nav-header__item-icon--blue " />
+
+              <p className="nav-header__item-text nav-header__item-text--blue">
+                Home
+              </p>
+            </li>
+          </Link>
           <li
             onClick={handleOpenSearchModal}
             className="nav-header__item group"
