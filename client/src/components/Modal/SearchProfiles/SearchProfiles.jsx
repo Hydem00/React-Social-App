@@ -35,7 +35,7 @@ const SearchProfiles = () => {
           />
         </div>
       </form>
-      <Profiles />
+      <Profiles isSearchingModal={true} />
     </div>
   );
 };
