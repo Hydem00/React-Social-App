@@ -2,9 +2,13 @@ import React from "react";
 import "./Profiles.scss";
 import profileUser from "../../../assets/profile-user.png";
 
-const Profiles = ({ isAside }) => {
+const Profiles = ({ isAside, isSearchingModal }) => {
   return (
-    <section className="profiles">
+    <section
+      className={`profiles ${
+        isAside || isSearchingModal ? "" : "profiles--separate-subpage"
+      }`}
+    >
       {isAside ? (
         <h3 className="profiles__title">Profiles worth following</h3>
       ) : (
@@ -16,6 +20,10 @@ const Profiles = ({ isAside }) => {
           Lorem ipsum
         </a>
         <button className="profile__follow-btn">Follow</button>
+        <div className="profile__follows-wrapper">
+          <span className="profile__following-number">Following: 0</span>
+          <span className="profile__followers-number">Followers: 0</span>
+        </div>
       </div>
       {!isAside ? (
         <p className="profile__description">

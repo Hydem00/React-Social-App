@@ -3,12 +3,16 @@
 .profiles {
   @apply flex flex-wrap w-full rounded-lg overflow-hidden text-white bg-[#16181C];
 
+  &--separate-subpage {
+    @apply bg-transparent border border-[#2F3336];
+  }
+
   &__title {
     @apply w-full text-xl font-bold p-2;
   }
 
   .profile {
-    @apply w-full flex items-center;
+    @apply w-full flex flex-wrap items-center justify-center;
 
     &__icon {
       @apply h-16 p-2;
@@ -24,6 +28,15 @@
 
     &__description {
       @apply px-4 py-2;
+    }
+
+    &__follows-wrapper {
+      @apply w-full flex justify-center;
+    }
+
+    &__following-number,
+    &__followers-number {
+      @apply mx-2 my-2;
     }
   }
 }
