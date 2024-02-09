@@ -1,0 +1,7 @@
+.searched-profiles {
+  @apply w-full text-white;
+
+  &__headline {
+    @apply text-3xl text-center my-8;
+  }
+}
