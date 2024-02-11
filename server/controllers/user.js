@@ -42,6 +42,7 @@ exports.getUser = asyncHandler(async (req, res, next) => {
     #swagger.tags = ['User']
     #swagger.summary = 'Get specific user'
     #swagger.description = 'Endpoint to retrieve a specific user by their username.'
+    #swagger.security = [{ "bearerAuth": [] }]
     #swagger.parameters['username'] = {
         in: 'path',
         description: 'Username of the user',

@@ -2,8 +2,8 @@
   "openapi": "3.0.0",
   "info": {
     "version": "2.1.0",
-    "title": "SOCIAL RESTAPI",
-    "description": "<b>Twitter clone</b>",
+    "title": "\"SOCIAL RESTAPI\";",
+    "description": "\"A comprehensive REST API for a social networking service, designed as a <b>Twitter clone</b>. This API supports functionalities including user authentication (login and signup), profile management, and posting messages.\";",
     "license": {
       "name": "MIT",
       "url": "https://spdx.org/licenses/MIT.html"
@@ -174,7 +174,12 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/posts/{id}/togglelike": {
@@ -762,7 +767,12 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/users/{id}/follow": {
