@@ -229,8 +229,7 @@ exports.addComment = asyncHandler(async (req, res, next) => {
     await post.save();
 
     comment = await comment
-        .populate({ path: "user", select: "avatar username fullname" })
-        .execPopulate();
+        .populate({ path: "user", select: "avatar username fullname" });
 
     res.status(200).json({ success: true, data: comment });
 });
