@@ -105,8 +105,7 @@ exports.addPost = asyncHandler(async (req, res, next) => {
     });
 
     post = await post
-        .populate({ path: "user", select: "avatar username fullname" })
-        .execPopulate();
+        .populate({ path: "user", select: "avatar username fullname" });
 
     res.status(200).json({ success: true, data: post });
 });
