@@ -834,6 +834,25 @@
           }
         ]
       }
+    },
+    "/api/users/trending": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get trending or active users",
+        "description": "Endpoint to retrieve users based on engagement and activity or fallback to recently active users if no trending users are found.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {

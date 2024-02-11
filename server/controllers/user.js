@@ -115,6 +115,40 @@ exports.getUser = asyncHandler(async (req, res, next) => {
     res.status(200).json({ success: true, data: user });
 });
 
+exports.getTrendingUsers = asyncHandler(async (req, res, next) => {
+    /*
+    #swagger.tags = ['User']
+    #swagger.summary = 'Get trending or active users'
+    #swagger.description = 'Endpoint to retrieve users based on engagement and activity or fallback to recently active users if no trending users are found.'
+    #swagger.security = [{ "bearerAuth": [] }]
+    */
+
+    let users = await User.aggregate([
+        { $sort: { followersCount: -1, postCount: -1 } },
+        { $limit: 10 } // Limit to top 10 trending users
+    ]);
+
+    // Fallback: If no trending users are found, fetch recently active or created users
+    if (!users.length) {
+        users = await User.find({})
+            .sort({ createdAt: -1 }) // Sort by most recently created
+            .limit(10) // Limit to 10 users
+            .select("-password") // Exclude sensitive information
+            .lean()
+            .exec();
+    }
+
+    if (!users || users.length === 0) {
+        return next({
+            message: 'No users found',
+            statusCode: 404,
+        });
+    }
+
+
+    res.status(200).json({ success: true, data: users });
+});
+
 exports.follow = asyncHandler(async (req, res, next) => {
     /*
     #swagger.tags = ['User']
