@@ -37,6 +37,34 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
     res.status(200).json({ success: true, data: users });
 });
 
+exports.getAllUsers = asyncHandler(async (req, res, next) => {
+    /*
+    #swagger.tags = ['User']
+    #swagger.summary = 'Get all users'
+    #swagger.description = 'Endpoint to retrieve all users from the database, excluding sensitive information.'
+    #swagger.security = [{ "bearerAuth": [] }]
+    */
+
+    // Fetch all users, excluding passwords and limiting the fields returned for efficiency
+    const users = await User.find({})
+        .select("_id username avatar") // Exclude the password field
+        .lean() // Lean option for faster execution since we just need plain JavaScript objects
+        .exec();
+
+    // Check if users were found
+    if (!users || users.length === 0) {
+        return next({
+            message: 'No users found',
+            statusCode: 404,
+        });
+    }
+
+    // Optional: Additional processing on the users data as needed
+
+    // Respond with the list of all users
+    res.status(200).json({ success: true, data: users });
+});
+
 exports.getUser = asyncHandler(async (req, res, next) => {
     /*
     #swagger.tags = ['User']
@@ -304,22 +332,26 @@ exports.editUser = asyncHandler(async (req, res, next) => {
     /*
     #swagger.tags = ['User']
     #swagger.summary = 'Edit user details'
-    #swagger.description = 'Endpoint to edit the details of a user.'
+    #swagger.description = 'Endpoint to edit the details of a user, with the option to update the avatar.'
     #swagger.security = [{ "bearerAuth": [] }]
     */
 
-    const { fullname, bio } = req.body;
+    const { fullname, bio, avatar } = req.body;
+
+    let update = { fullname, bio, avatar };
 
     const user = await User.findByIdAndUpdate(
         req.user.id,
-        {
-            $set: { fullname, bio },
-        },
-        {
-            new: true,
-            runValidators: true,
-        }
-    );
+        { $set: update },
+        { new: true, runValidators: true }
+    ).select("-password"); // Exclude password from the returned document
+
+    if (!user) {
+        return next({
+            message: 'User not found',
+            statusCode: 404,
+        });
+    }
 
     res.status(200).json({ success: true, data: user });
 });

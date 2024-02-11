@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "version": "2.1.0",
-    "title": "\"SOCIAL RESTAPI\";",
+    "title": "SOCIAL RESTAPI",
     "description": "\"A comprehensive REST API for a social networking service, designed as a <b>Twitter clone</b>. This API supports functionalities including user authentication (login and signup), profile management, and posting messages.\";",
     "license": {
       "name": "MIT",
@@ -696,7 +696,7 @@
           "User"
         ],
         "summary": "Edit user details",
-        "description": "Endpoint to edit the details of a user.",
+        "description": "Endpoint to edit the details of a user, with the option to update the avatar.",
         "responses": {
           "200": {
             "description": "OK"
@@ -718,6 +718,9 @@
                   },
                   "bio": {
                     "example": "any"
+                  },
+                  "avatar": {
+                    "example": "any"
                   }
                 }
               }
@@ -733,6 +736,44 @@
         ],
         "summary": "Get user feed",
         "description": "Endpoint to retrieve the feed for a user.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/users/trending": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get trending or active users",
+        "description": "Endpoint to retrieve users based on engagement and activity or fallback to recently active users if no trending users are found.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/users/all": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get all users",
+        "description": "Endpoint to retrieve all users from the database, excluding sensitive information.",
         "responses": {
           "200": {
             "description": "OK"
@@ -823,25 +864,6 @@
             "description": "ID of the user to unfollow"
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/api/users/trending": {
-      "get": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Get trending or active users",
-        "description": "Endpoint to retrieve users based on engagement and activity or fallback to recently active users if no trending users are found.",
         "responses": {
           "200": {
             "description": "OK"
