@@ -40,6 +40,7 @@ exports.getPost = asyncHandler(async (req, res, next) => {
         #swagger.tags = ['Post']
         #swagger.summary = 'Get a post'
         #swagger.description = 'Endpoint to retrieve a post.'
+        #swagger.security = [{ "bearerAuth": [] }]
     */
     const post = await Post.findById(req.params.id)
         .populate({

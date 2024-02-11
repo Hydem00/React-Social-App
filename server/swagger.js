@@ -1,6 +1,6 @@
 const swaggerAutogen = require('swagger-autogen')({ openapi: "3.0.0", language: 'pl-PL', autoHeaders: false })
 const outputFile = './swagger-output.json'
-const routesFiles = ['./routes/*']
+const routesFiles = ['./app.js'] //['./app.js', './routes/*.js']
 const dotenv = require('dotenv').config()
 
 const config = {
@@ -39,9 +39,11 @@ const doc = {
 
     ],
     securityDefinitions: {
-        basicAuth: {
-            type: 'http',
-            scheme: 'basic'
+        bearerAuth: {
+            type: 'apiKey',
+            name: 'Authorization',
+            in: 'header',
+            description: 'Enter your JWT token as: Bearer <token>'
         },
     },
 }

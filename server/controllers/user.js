@@ -5,9 +5,21 @@ const asyncHandler = require("../utils/asyncHandler");
 exports.getUsers = asyncHandler(async (req, res, next) => {
     /*
         #swagger.tags = ['User']
-        #swagger.summary = 'Get list of users'
-        #swagger.description = 'Endpoint to retrieve all users.'
+        #swagger.summary = 'Get list of followed users'
+        #swagger.description = 'Endpoint to retrieve all followed users.'
         #swagger.security = [{ "bearerAuth": [] }]
+        #swagger.responses[200] = { 
+            description: 'List of followed users successfully retrieved.',
+            schema: { 
+                $success: true, 
+                $data: [{ 
+                    _id: 'user_id', 
+                    name: 'User Name', 
+                    email: 'user@example.com', 
+                    isFollowing: true 
+                }]
+            } 
+        }
     */
 
     let users = await User.find().select("-password").lean().exec();
