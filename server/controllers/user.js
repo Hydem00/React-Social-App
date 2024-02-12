@@ -47,7 +47,7 @@ exports.getAllUsers = asyncHandler(async (req, res, next) => {
 
     // Fetch all users, excluding passwords and limiting the fields returned for efficiency
     const users = await User.find({})
-        .select("_id username avatar fullname bio") // Exclude the password field
+        .select("-password") // Exclude the password field
         .lean() // Lean option for faster execution since we just need plain JavaScript objects
         .exec();
 
