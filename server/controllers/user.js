@@ -75,7 +75,6 @@ exports.getAllUsers = asyncHandler(async (req, res, next) => {
         .lean()
         .exec();
 
-    // Check if users were found
     if (!users || users.length === 0) {
         return next({
             message: 'No users found',
@@ -83,22 +82,18 @@ exports.getAllUsers = asyncHandler(async (req, res, next) => {
         });
     }
 
-    // Assuming req.user.id contains the ID of the logged-in user
     const loggedInUserId = req.user.id;
 
-    // Modify each user object to include isMe and isFollowing properties
     const modifiedUsers = users.map(user => {
-        // Convert follower IDs to string for comparison
         const followers = user.followers.map(follower => follower.toString());
 
         return {
             ...user,
-            isMe: user._id.toString() === loggedInUserId, // Check if the user is the logged-in user
-            isFollowing: followers.includes(loggedInUserId), // Check if the logged-in user is following this user
+            isMe: user._id.toString() === loggedInUserId,
+            isFollowing: followers.includes(loggedInUserId),
         };
     });
 
-    // Respond with the modified list of all users
     res.status(200).json({ success: true, data: modifiedUsers });
 });
 
