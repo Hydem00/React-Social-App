@@ -312,6 +312,12 @@ exports.unfollow = asyncHandler(async (req, res, next) => {
         });
     }
 
+    const isFollowing = req.user.following.includes(req.params.id);
+
+    if (!isFollowing) {
+        return next({ message: "You are not following this user", statusCode: 400 });
+    }
+
     // make the sure the user is not the logged in user
     if (req.params.id === req.user.id) {
         return next({ message: "You can't follow/unfollow yourself", status: 400 });
