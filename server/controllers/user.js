@@ -45,10 +45,9 @@ exports.getAllUsers = asyncHandler(async (req, res, next) => {
     #swagger.security = [{ "bearerAuth": [] }]
     */
 
-    // Fetch all users, excluding passwords and limiting the fields returned for efficiency
     const users = await User.find({})
-        .select("_id username avatar fullname bio followers following") // Exclude the password field
-        .lean() // Lean option for faster execution since we just need plain JavaScript objects
+        .select("_id username avatar fullname bio followers following")
+        .lean()
         .exec();
 
     // Check if users were found
@@ -58,8 +57,6 @@ exports.getAllUsers = asyncHandler(async (req, res, next) => {
             statusCode: 404,
         });
     }
-
-    // Optional: Additional processing on the users data as needed
 
     // Respond with the list of all users
     res.status(200).json({ success: true, data: users });
