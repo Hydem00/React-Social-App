@@ -15,11 +15,16 @@ const app = express();
 connectToDb();
 app.use(express.json());
 
-const apiLimiter = new rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minute
-    max: 100, // limit each IP to 100 requests per windowMs
-});
-app.use("/api/", apiLimiter);
+const isRateLimitEnabled = process.env.RATE_LIMIT_ENABLED || 'true';
+
+if (process.env.RATE_LIMIT_ENABLED === 'true') {
+    const apiLimiter = rateLimit({
+        windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
+        max: parseInt(process.env.RATE_LIMIT_MAX) || 100,
+    });
+
+    app.use("/api/", apiLimiter);
+}
 
 var corsOptions = {
     origin: process.env.URI || "http://localhost:3000",

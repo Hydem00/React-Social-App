@@ -36,19 +36,18 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
 
     res.status(200).json({ success: true, data: users });
 });
-
+/*
 exports.getAllUsers = asyncHandler(async (req, res, next) => {
     /*
     #swagger.tags = ['User']
     #swagger.summary = 'Get all users'
     #swagger.description = 'Endpoint to retrieve all users from the database, excluding sensitive information.'
     #swagger.security = [{ "bearerAuth": [] }]
-    */
+    
 
-    // Fetch all users, excluding passwords and limiting the fields returned for efficiency
     const users = await User.find({})
-        .select("_id username avatar fullname bio followers following") // Exclude the password field
-        .lean() // Lean option for faster execution since we just need plain JavaScript objects
+        .select("_id username avatar fullname bio followers following")
+        .lean()
         .exec();
 
     // Check if users were found
@@ -59,10 +58,43 @@ exports.getAllUsers = asyncHandler(async (req, res, next) => {
         });
     }
 
-    // Optional: Additional processing on the users data as needed
-
     // Respond with the list of all users
     res.status(200).json({ success: true, data: users });
+});*/
+
+exports.getAllUsers = asyncHandler(async (req, res, next) => {
+    /*
+    #swagger.tags = ['User']
+    #swagger.summary = 'Get all users'
+    #swagger.description = 'Endpoint to retrieve all users from the database, excluding sensitive information, and indicating whether the logged-in user is following them and if they are the logged-in user.'
+    #swagger.security = [{ "bearerAuth": [] }]
+    */
+
+    const users = await User.find({})
+        .select("_id username avatar fullname bio followers following")
+        .lean()
+        .exec();
+
+    if (!users || users.length === 0) {
+        return next({
+            message: 'No users found',
+            statusCode: 404,
+        });
+    }
+
+    const loggedInUserId = req.user.id;
+
+    const modifiedUsers = users.map(user => {
+        const followers = user.followers.map(follower => follower.toString());
+
+        return {
+            ...user,
+            isMe: user._id.toString() === loggedInUserId,
+            isFollowing: followers.includes(loggedInUserId),
+        };
+    });
+
+    res.status(200).json({ success: true, data: modifiedUsers });
 });
 
 exports.getUser = asyncHandler(async (req, res, next) => {
@@ -143,13 +175,13 @@ exports.getUser = asyncHandler(async (req, res, next) => {
     res.status(200).json({ success: true, data: user });
 });
 
-exports.getTrendingUsers = asyncHandler(async (req, res, next) => {
+/*exports.getTrendingUsers = asyncHandler(async (req, res, next) => {
     /*
     #swagger.tags = ['User']
     #swagger.summary = 'Get trending or active users'
     #swagger.description = 'Endpoint to retrieve users based on engagement and activity or fallback to recently active users if no trending users are found.'
     #swagger.security = [{ "bearerAuth": [] }]
-    */
+    
 
     let users = await User.aggregate([
         { $sort: { followersCount: -1, postCount: -1 } },
@@ -175,6 +207,49 @@ exports.getTrendingUsers = asyncHandler(async (req, res, next) => {
 
 
     res.status(200).json({ success: true, data: users });
+});*/
+
+exports.getTrendingUsers = asyncHandler(async (req, res, next) => {
+    let users = await User.aggregate([
+        { $sort: { followersCount: -1, postCount: -1 } },
+        { $limit: 10 } // Limit to top 10 trending users
+    ]);
+
+    // Fallback: If no trending users are found, fetch recently active or created users
+    if (!users.length) {
+        users = await User.find({})
+            .sort({ createdAt: -1 }) // Sort by most recently created
+            .limit(10) // Limit to 10 users
+            .select("-password") // Exclude sensitive information
+            .lean()
+            .exec();
+    }
+
+    if (!users || users.length === 0) {
+        return next({
+            message: 'No users found',
+            statusCode: 404,
+        });
+    }
+
+    const loggedInUserId = req.user.id;
+
+    const modifiedUsers = users.map(user => {
+
+        user = user.toObject ? user.toObject() : user;
+
+        // Add isMe and isFollowing flags
+        user.isMe = user._id.toString() === loggedInUserId;
+        user.isFollowing = user.followers && user.followers.includes(loggedInUserId);
+
+        // Remove fields not needed in the response
+        delete user.followers;
+        delete user.following;
+
+        return user;
+    });
+
+    res.status(200).json({ success: true, data: modifiedUsers });
 });
 
 exports.follow = asyncHandler(async (req, res, next) => {
