@@ -71,7 +71,7 @@ exports.getAllUsers = asyncHandler(async (req, res, next) => {
     */
 
     const users = await User.find({})
-        .select("_id username avatar fullname bio followers following")
+        .select("-password")
         .lean()
         .exec();
 
@@ -235,18 +235,13 @@ exports.getTrendingUsers = asyncHandler(async (req, res, next) => {
     const loggedInUserId = req.user.id;
 
     const modifiedUsers = users.map(user => {
+        const followers = user.followers.map(follower => follower.toString());
 
-        user = user.toObject ? user.toObject() : user;
-
-        // Add isMe and isFollowing flags
-        user.isMe = user._id.toString() === loggedInUserId;
-        user.isFollowing = user.followers && user.followers.includes(loggedInUserId);
-
-        // Remove fields not needed in the response
-        delete user.followers;
-        delete user.following;
-
-        return user;
+        return {
+            ...user,
+            isMe: user._id.toString() === loggedInUserId,
+            isFollowing: followers.includes(loggedInUserId),
+        };
     });
 
     res.status(200).json({ success: true, data: modifiedUsers });
