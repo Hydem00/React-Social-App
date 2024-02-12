@@ -470,7 +470,7 @@
         "description": "Endpoint to get the current logged-in user information.",
         "responses": {
           "200": {
-            "description": "List of followed users successfully retrieved.",
+            "description": "User successfully retrieved.",
             "content": {
               "application/json": {
                 "schema": {
@@ -773,7 +773,7 @@
           "User"
         ],
         "summary": "Get all users",
-        "description": "Endpoint to retrieve all users from the database, excluding sensitive information.",
+        "description": "Endpoint to retrieve all users from the database, excluding sensitive information, and including whether the logged-in user is following them and if the user is the logged-in user.",
         "responses": {
           "200": {
             "description": "OK"

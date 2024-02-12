@@ -128,7 +128,7 @@ exports.me = asyncHandler(async (req, res, next) => {
     #swagger.description = 'Endpoint to get the current logged-in user information.'
     #swagger.security = [{ "bearerAuth": [] }]
         #swagger.responses[200] = { 
-            description: 'List of followed users successfully retrieved.',
+            description: 'User successfully retrieved.',
             schema: { 
                 success: true, 
                 data: {
