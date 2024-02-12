@@ -1,93 +1,59 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { StoreContext } from '../../store/StoreProvider';
 
-const Login = () => {
+const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
 
     const navigate = useNavigate();
 
-    const { isLoggedIn, setIsLoggedIn } = useContext(StoreContext);
-
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            fetch('http://localhost:3001/api/auth/me', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        setIsLoggedIn(true);
-                        navigate('/');
-                    } else {
-                        localStorage.removeItem('token'); // Remove invalid token
-                    }
-                })
-                .catch(error => {
-                    console.error('Error verifying token:', error);
-                });
-        }
-    }, [navigate, setIsLoggedIn]);
-
-    useEffect(() => {
-        if (isLoggedIn) {
-            navigate("/");
-        }
-    }, [isLoggedIn, navigate]);
-
-
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        if (password !== confirmPassword) {
+            setErrorMessage("Passwords do not match");
+            return;
+        }
 
         const requestOptions = {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                username: username,
-                password: password,
+                username,
+                password,
             }),
         };
 
-        fetch('http://localhost:3001/api/auth/login', requestOptions)
+        fetch('http://localhost:3001/api/auth/signup', requestOptions)
             .then((response) => response.json())
             .then((data) => {
-                setUsername("");
-                setPassword("");
-
                 if (data.success) {
-                    const token = data.token;
-                    localStorage.setItem("token", token);
-
-                    setIsLoggedIn(true);
-
-                    navigate('/');
+                    setSuccessMessage("Registration successful! Redirecting to login...");
+                    setTimeout(() => {
+                        navigate('/login');
+                    }, 3000);
                 } else {
                     setErrorMessage(data.message);
                 }
-
             })
             .catch((error) => {
                 console.error('Error:', error);
+                setErrorMessage("An error occurred. Please try again.");
             });
     };
 
-    const handleRegister = () => {
-        navigate('/register');
+    const handleLogin = () => {
+        navigate('/login'); // Function to navigate back to the login page
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full space-y-8">
                 <div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-white">Sign in to your account</h2>
+                    <h2 className="mt-6 text-center text-3xl font-extrabold text-white">Create your account</h2>
                 </div>
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                     <div className="rounded-md shadow-sm">
@@ -111,10 +77,23 @@ const Login = () => {
                                 name="password"
                                 type="password"
                                 required
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                                className="appearance-none rounded-none relative block w-full mb-2 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                                 placeholder="Password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="confirmPassword" className="sr-only">Confirm Password</label>
+                            <input
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                type="password"
+                                required
+                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                                placeholder="Confirm Password"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
                             />
                         </div>
                     </div>
@@ -123,18 +102,23 @@ const Login = () => {
                             {errorMessage}
                         </div>
                     )}
+                    {successMessage && (
+                        <div className="text-center mb-6 py-2 px-3 bg-green-100 text-green-700 rounded-lg">
+                            {successMessage}
+                        </div>
+                    )}
                     <button
                         type="submit"
-                        className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                        Login
-                    </button>
-                    <button
-                        type="button" // This button does not submit the form
-                        onClick={handleRegister}
-                        className="mt-2 group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                        className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                     >
                         Sign up
+                    </button>
+                    <button
+                        type="button"
+                        onClick={handleLogin}
+                        className="mt-2 group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                    >
+                        Already have an account? Login
                     </button>
                 </form>
             </div>
@@ -142,4 +126,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Register;

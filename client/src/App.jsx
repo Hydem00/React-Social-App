@@ -10,6 +10,7 @@ import { StoreContext } from "./components/store/StoreProvider";
 
 //
 import Login from "./components/Main/Auth/Login";
+import Register from "./components/Main/Auth/Register";
 
 function App() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,6 +44,7 @@ function App() {
             <Router>
                 <Routes>
                     <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
                     <Route path="*" element={<View />} />
                 </Routes>
             </Router>
