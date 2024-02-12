@@ -71,7 +71,7 @@ exports.getAllUsers = asyncHandler(async (req, res, next) => {
     */
 
     const users = await User.find({})
-        .select("_id username avatar fullname bio followers following")
+        .select("_id username avatar fullname bio followersCount followingCount")
         .lean()
         .exec();
 
