@@ -1,22 +1,41 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import TextEditor from "../TextEditor/TextEditor";
 import "./Comments.scss";
-import profileUser from "../../../../assets/profile-user.png";
 
-const Comments = () => {
+const Comments = ({
+  currentPostData,
+  formatBase64Image,
+  fetchSearchedPost,
+}) => {
   return (
-    <section className="comment">
-      <TextEditor buttonText="Reply" placeholder="Publish your answer" />
-      <div className="comment__author">
-        <img src={profileUser} alt="" className="comment__profile-icon" />
-        <a className="comment__author-name">Lorem Ipsum</a>
-      </div>
-      <p className="comment__text">
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dignissimos
-        cum aliquid optio recusandae repudiandae sequi reiciendis ea vitae
-        maxime voluptatem repellat unde officia, aut ipsum! Aliquam consequuntur
-        eligendi nemo nostrum.
-      </p>
+    <section className="comments">
+      <TextEditor
+        addComment={true}
+        fetchSearchedPost={fetchSearchedPost}
+        buttonText="Reply"
+        placeholder="Publish your answer"
+      />
+      {currentPostData?.comments?.length > 0 &&
+        currentPostData.comments.map((comment) => (
+          <div className="comment" key={comment?._id}>
+            <div className="comments__author">
+              <Link className="flex" to={`/profile/${comment?.user?.username}`}>
+                <img
+                  src={comment?.user?.avatar}
+                  alt=""
+                  className="comments__profile-icon"
+                />
+                <span className="comments__author-name">
+                  {comment?.user?.username}
+                </span>
+              </Link>
+            </div>
+            <p className="comments__text" style={{ whiteSpace: "pre-wrap" }}>
+              {comment?.text}
+            </p>
+          </div>
+        ))}
     </section>
   );
 };
