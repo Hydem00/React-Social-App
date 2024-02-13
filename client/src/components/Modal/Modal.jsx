@@ -16,10 +16,10 @@ const Modal = ({ isOpen, onClose }) => {
         } w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] h-screen bg-[rgba(118,114,114,0.5)]`}
       >
         <div className="relative w-full max-w-lg max-h-full">
-          <div className="relative bg-black rounded-lg shadow dark:bg-black-900">
+          <div className="relative max-h-full bg-black rounded-lg shadow dark:bg-black-900">
             <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
               <h3 className="text-xl font-medium text-gray-900 dark:text-white">
-                Publish New Post
+                {isSearchActive ? "Search Profiles" : "Publish New Post"}
               </h3>
               <button
                 onClick={onClose}
@@ -48,7 +48,7 @@ const Modal = ({ isOpen, onClose }) => {
               {isPublishPostActive && (
                 <TextEditor buttonText="Publish" isModal={true} />
               )}
-              {isSearchActive && <SearchProfiles />}
+              {isSearchActive && <SearchProfiles closeModal={onClose} />}
             </div>
           </div>
         </div>
