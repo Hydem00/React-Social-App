@@ -3,10 +3,13 @@
 .user-profile {
   @apply flex items-end flex-wrap w-full text-white;
   &__img {
-    @apply w-32 ml-8 mt-32;
+    @apply rounded-full w-32 ml-8 mt-32;
   }
   &__follow-btn {
     @include follow-btn;
+    &--followed {
+      @apply text-white bg-[#16181C] border-1;
+    }
   }
 
   &__info {
@@ -23,6 +26,10 @@
 
   &__follows-wrapper {
     @apply flex justify-around my-4;
+  }
+
+  &__posts {
+    @apply w-full;
   }
 
   &__post-types {

@@ -5,9 +5,21 @@ const asyncHandler = require("../utils/asyncHandler");
 exports.getUsers = asyncHandler(async (req, res, next) => {
     /*
         #swagger.tags = ['User']
-        #swagger.summary = 'Get list of users'
-        #swagger.description = 'Endpoint to retrieve all users.'
+        #swagger.summary = 'Get list of followed users'
+        #swagger.description = 'Endpoint to retrieve all followed users.'
         #swagger.security = [{ "bearerAuth": [] }]
+        #swagger.responses[200] = { 
+            description: 'List of followed users successfully retrieved.',
+            schema: { 
+                $success: true, 
+                $data: [{ 
+                    _id: 'user_id', 
+                    name: 'User Name', 
+                    email: 'user@example.com', 
+                    isFollowing: true 
+                }]
+            } 
+        }
     */
 
     let users = await User.find().select("-password").lean().exec();
@@ -23,6 +35,66 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
     users = users.filter((user) => user._id.toString() !== req.user.id);
 
     res.status(200).json({ success: true, data: users });
+});
+/*
+exports.getAllUsers = asyncHandler(async (req, res, next) => {
+    /*
+    #swagger.tags = ['User']
+    #swagger.summary = 'Get all users'
+    #swagger.description = 'Endpoint to retrieve all users from the database, excluding sensitive information.'
+    #swagger.security = [{ "bearerAuth": [] }]
+    
+
+    const users = await User.find({})
+        .select("_id username avatar fullname bio followers following")
+        .lean()
+        .exec();
+
+    // Check if users were found
+    if (!users || users.length === 0) {
+        return next({
+            message: 'No users found',
+            statusCode: 404,
+        });
+    }
+
+    // Respond with the list of all users
+    res.status(200).json({ success: true, data: users });
+});*/
+
+exports.getAllUsers = asyncHandler(async (req, res, next) => {
+    /*
+    #swagger.tags = ['User']
+    #swagger.summary = 'Get all users'
+    #swagger.description = 'Endpoint to retrieve all users from the database, excluding sensitive information, and indicating whether the logged-in user is following them and if they are the logged-in user.'
+    #swagger.security = [{ "bearerAuth": [] }]
+    */
+
+    const users = await User.find({})
+        .select("-password")
+        .lean()
+        .exec();
+
+    if (!users || users.length === 0) {
+        return next({
+            message: 'No users found',
+            statusCode: 404,
+        });
+    }
+
+    const loggedInUserId = req.user.id;
+
+    const modifiedUsers = users.map(user => {
+        const followers = user.followers.map(follower => follower.toString());
+
+        return {
+            ...user,
+            isMe: user._id.toString() === loggedInUserId,
+            isFollowing: followers.includes(loggedInUserId),
+        };
+    });
+
+    res.status(200).json({ success: true, data: modifiedUsers });
 });
 
 exports.getUser = asyncHandler(async (req, res, next) => {
@@ -103,6 +175,78 @@ exports.getUser = asyncHandler(async (req, res, next) => {
     res.status(200).json({ success: true, data: user });
 });
 
+/*exports.getTrendingUsers = asyncHandler(async (req, res, next) => {
+    /*
+    #swagger.tags = ['User']
+    #swagger.summary = 'Get trending or active users'
+    #swagger.description = 'Endpoint to retrieve users based on engagement and activity or fallback to recently active users if no trending users are found.'
+    #swagger.security = [{ "bearerAuth": [] }]
+    
+
+    let users = await User.aggregate([
+        { $sort: { followersCount: -1, postCount: -1 } },
+        { $limit: 10 } // Limit to top 10 trending users
+    ]);
+
+    // Fallback: If no trending users are found, fetch recently active or created users
+    if (!users.length) {
+        users = await User.find({})
+            .sort({ createdAt: -1 }) // Sort by most recently created
+            .limit(10) // Limit to 10 users
+            .select("-password") // Exclude sensitive information
+            .lean()
+            .exec();
+    }
+
+    if (!users || users.length === 0) {
+        return next({
+            message: 'No users found',
+            statusCode: 404,
+        });
+    }
+
+
+    res.status(200).json({ success: true, data: users });
+});*/
+
+exports.getTrendingUsers = asyncHandler(async (req, res, next) => {
+    let users = await User.aggregate([
+        { $sort: { followersCount: -1, postCount: -1 } },
+        { $limit: 10 } // Limit to top 10 trending users
+    ]);
+
+    // Fallback: If no trending users are found, fetch recently active or created users
+    if (!users.length) {
+        users = await User.find({})
+            .sort({ createdAt: -1 }) // Sort by most recently created
+            .limit(10) // Limit to 10 users
+            .select("-password") // Exclude sensitive information
+            .lean()
+            .exec();
+    }
+
+    if (!users || users.length === 0) {
+        return next({
+            message: 'No users found',
+            statusCode: 404,
+        });
+    }
+
+    const loggedInUserId = req.user.id;
+
+    const modifiedUsers = users.map(user => {
+        const followers = user.followers.map(follower => follower.toString());
+
+        return {
+            ...user,
+            isMe: user._id.toString() === loggedInUserId,
+            isFollowing: followers.includes(loggedInUserId),
+        };
+    });
+
+    res.status(200).json({ success: true, data: modifiedUsers });
+});
+
 exports.follow = asyncHandler(async (req, res, next) => {
     /*
     #swagger.tags = ['User']
@@ -166,6 +310,12 @@ exports.unfollow = asyncHandler(async (req, res, next) => {
             message: `No user found for ID ${req.params.id}`,
             statusCode: 404,
         });
+    }
+
+    const isFollowing = req.user.following.includes(req.params.id);
+
+    if (!isFollowing) {
+        return next({ message: "You are not following this user", statusCode: 400 });
     }
 
     // make the sure the user is not the logged in user
@@ -258,22 +408,26 @@ exports.editUser = asyncHandler(async (req, res, next) => {
     /*
     #swagger.tags = ['User']
     #swagger.summary = 'Edit user details'
-    #swagger.description = 'Endpoint to edit the details of a user.'
+    #swagger.description = 'Endpoint to edit the details of a user, with the option to update the avatar.'
     #swagger.security = [{ "bearerAuth": [] }]
     */
 
-    const { fullname, bio } = req.body;
+    const { fullname, bio, avatar } = req.body;
+
+    let update = { fullname, bio, avatar };
 
     const user = await User.findByIdAndUpdate(
         req.user.id,
-        {
-            $set: { fullname, bio },
-        },
-        {
-            new: true,
-            runValidators: true,
-        }
-    );
+        { $set: update },
+        { new: true, runValidators: true }
+    ).select("-password"); // Exclude password from the returned document
+
+    if (!user) {
+        return next({
+            message: 'User not found',
+            statusCode: 404,
+        });
+    }
 
     res.status(200).json({ success: true, data: user });
 });

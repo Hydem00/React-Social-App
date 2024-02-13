@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import axios from "axios";
 
 import {
   MdInsertPhoto,
@@ -9,18 +10,115 @@ import {
 import EmojiPicker from "emoji-picker-react";
 
 import "./TextEditor.scss";
+import { StoreContext } from "../../../store/StoreProvider";
+import { useParams } from "react-router-dom";
 
-const TextEditor = ({ buttonText, placeholder, isModal }) => {
-  const [newPostText, setNewPostText] = useState("");
+const TextEditor = ({
+  buttonText,
+  placeholder,
+  isModal,
+  addComment,
+  fetchSearchedPost,
+}) => {
+  const [textareaText, setNewTextareaText] = useState("");
+  const { setIsPostWarningActive } = useContext(StoreContext);
+  const [newImage, setNewImage] = useState("");
   const [isEmojiPickerActive, setIsEmojiPickerActive] = useState(false);
   const [listNumber, setListNumber] = useState(1);
   const [isFocused, setIsFocused] = useState(false);
   const previewImageRef = useRef(null);
   const fileInputRef = useRef(null);
   const textareaRef = useRef(null);
+  const { id } = useParams();
+
+  const handlePublishPost = async () => {
+    if (textareaText.length > 0) {
+      setIsPostWarningActive(false);
+      try {
+        const response = await axios.post(
+          "http://localhost:3001/api/posts/",
+          {
+            caption: textareaText,
+            files: newImage,
+            tags: "",
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        );
+
+        const result = response.data;
+        // console.log(result);
+
+        if (result.success) {
+          setNewTextareaText("");
+          setNewImage("");
+          setListNumber(1);
+        }
+
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+
+        if (previewImageRef.current) {
+          previewImageRef.current.src = "";
+        }
+      } catch (error) {
+        console.error("There was a problem with the axios operation:", error);
+      }
+    } else {
+      setIsPostWarningActive(true);
+    }
+  };
+
+  const handlePublishComment = async () => {
+    console.log("comment");
+    if (textareaText.length > 0) {
+      setIsPostWarningActive(false);
+      try {
+        const response = await axios.post(
+          `http://localhost:3001/api/posts/${id}/comments`,
+          {
+            text: textareaText,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        );
+
+        const result = response.data;
+        console.log(result);
+
+        if (result.success) {
+          setNewTextareaText("");
+          setNewImage("");
+          setListNumber(1);
+          fetchSearchedPost();
+        }
+
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+
+        if (previewImageRef.current) {
+          previewImageRef.current.src = "";
+        }
+      } catch (error) {
+        console.error("There was a problem with the axios operation:", error);
+      }
+    } else {
+      setIsPostWarningActive(true);
+    }
+  };
 
   const handleNewPostText = (event) => {
-    setNewPostText(event.target.value);
+    setNewTextareaText(event.target.value);
   };
 
   const handleUploadImage = (event) => {
@@ -29,30 +127,51 @@ const TextEditor = ({ buttonText, placeholder, isModal }) => {
       const reader = new FileReader();
 
       reader.onload = function (e) {
+        const binaryData = e.target.result;
+        console.log(binaryData);
+
+        const binaryArray = new Uint8Array(binaryData);
+        // console.log("Dane binarne jako Uint8Array:", binaryArray);
+
+        const base64String = arrayBufferToBase64(binaryData);
+        // console.log("Dane binarne jako base64:", base64String);
+
+        setNewImage(base64String);
+
         const previewImage = previewImageRef.current;
         if (previewImage) {
-          previewImage.src = e.target.result;
+          previewImage.src = `data:image/jpeg;base64,${base64String}`;
         }
       };
 
-      reader.readAsDataURL(file);
+      reader.readAsArrayBuffer(file);
     }
   };
+
+  function arrayBufferToBase64(buffer) {
+    let binary = "";
+    const bytes = new Uint8Array(buffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return window.btoa(binary);
+  }
 
   const handleEmojiPicker = () => {
     setIsEmojiPickerActive((prevState) => !prevState);
   };
 
   const onEmojiClick = (emojiData) => {
-    setNewPostText((prevState) => prevState + emojiData.emoji);
+    setNewTextareaText((prevState) => prevState + emojiData.emoji);
   };
 
   const handleBulletList = () => {
-    setNewPostText((prevState) => prevState + `\n• `);
+    setNewTextareaText((prevState) => prevState + `\n• `);
   };
 
   const handleNumberList = () => {
-    setNewPostText((prevState) => prevState + `\n${listNumber}. `);
+    setNewTextareaText((prevState) => prevState + `\n${listNumber}. `);
     setListNumber((prevNumber) => prevNumber + 1);
   };
 
@@ -91,7 +210,7 @@ const TextEditor = ({ buttonText, placeholder, isModal }) => {
       textarea.removeEventListener("input", resizeTextarea);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [newPostText]);
+  }, [textareaText]);
 
   return (
     <div className="text-editor">
@@ -99,7 +218,7 @@ const TextEditor = ({ buttonText, placeholder, isModal }) => {
         id="autoresize"
         onChange={handleNewPostText}
         onFocus={handleFocus}
-        value={newPostText}
+        value={textareaText}
         ref={textareaRef}
         name="new-post"
         maxLength={280}
@@ -109,7 +228,12 @@ const TextEditor = ({ buttonText, placeholder, isModal }) => {
         placeholder={placeholder || "What's going on?!"}
       ></textarea>
       {!isFocused && (
-        <button className="text-editor__submit-post text-editor__submit-post--blur">
+        <button
+          onClick={() =>
+            !addComment ? handlePublishPost() : handlePublishComment()
+          }
+          className="text-editor__submit-post text-editor__submit-post--blur"
+        >
           {buttonText}
         </button>
       )}
@@ -161,7 +285,14 @@ const TextEditor = ({ buttonText, placeholder, isModal }) => {
             onClick={handleNumberList}
             className="text-editor__numbered-list"
           />
-          <button className="text-editor__submit-post">{buttonText}</button>
+          <button
+            onClick={() =>
+              !addComment ? handlePublishPost() : handlePublishComment()
+            }
+            className="text-editor__submit-post"
+          >
+            {buttonText}
+          </button>
         </div>
       )}
     </div>

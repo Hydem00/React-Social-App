@@ -40,6 +40,7 @@ exports.getPost = asyncHandler(async (req, res, next) => {
         #swagger.tags = ['Post']
         #swagger.summary = 'Get a post'
         #swagger.description = 'Endpoint to retrieve a post.'
+        #swagger.security = [{ "bearerAuth": [] }]
     */
     const post = await Post.findById(req.params.id)
         .populate({
@@ -104,8 +105,7 @@ exports.addPost = asyncHandler(async (req, res, next) => {
     });
 
     post = await post
-        .populate({ path: "user", select: "avatar username fullname" })
-        .execPopulate();
+        .populate({ path: "user", select: "avatar username fullname" });
 
     res.status(200).json({ success: true, data: post });
 });
@@ -222,6 +222,7 @@ exports.addComment = asyncHandler(async (req, res, next) => {
         user: req.user.id,
         post: req.params.id,
         text: req.body.text,
+        files: req.body.files,
     });
 
     post.comments.push(comment._id);
@@ -229,8 +230,7 @@ exports.addComment = asyncHandler(async (req, res, next) => {
     await post.save();
 
     comment = await comment
-        .populate({ path: "user", select: "avatar username fullname" })
-        .execPopulate();
+        .populate({ path: "user", select: "avatar username fullname" });
 
     res.status(200).json({ success: true, data: comment });
 });

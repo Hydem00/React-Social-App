@@ -1,62 +1,64 @@
-.post {
-  @apply text-white border-y border-[#2F3336];
+.posts {
+  @apply w-full text-white border-y border-[#2F3336];
 
-  &__wrapper {
-    @apply cursor-pointer transition duration-300 hover:bg-gray-900;
-  }
-
-  &__author {
-    @apply flex p-4 mt-4;
-    &-name {
-      @apply ml-2 font-semibold;
-    }
-  }
-
-  &__profile-icon {
-    @apply w-12;
-  }
-
-  &__text {
-    @apply ml-16 pb-4 text-base px-2;
-  }
-
-  &__img {
-    @apply rounded-lg w-3/4 mx-auto rounded-[25px];
-    // &-wrapper {
-    // }
-  }
-
-  &__social-btn-wrapper {
-    @apply flex items-center;
-  }
-
-  &__social-btns {
-    @apply flex justify-evenly p-2;
-    .btn-heart,
-    .btn-comment,
-    .btn-share,
-    .btn-stats {
-      @apply hover:transform hover:scale-125 cursor-pointer transition duration-200;
+  .post {
+    &__wrapper {
+      @apply border-[#2F3336] border-b-1 cursor-pointer transition duration-300 hover:bg-gray-900;
     }
 
-    .btn-heart {
-      @apply hover:text-red-600;
+    &__author {
+      @apply flex p-4 mt-4;
+      &-name {
+        @apply block ml-2 font-semibold;
+      }
     }
 
-    .btn-comment {
-      @apply hover:text-yellow-600;
+    &__profile-icon {
+      @apply rounded-full w-12;
     }
 
-    .btn-share {
-      @apply hover:text-blue-600;
+    &__text {
+      @apply break-all ml-16 pb-4 text-base px-6;
     }
 
-    .btn-stats {
-      @apply hover:text-green-600;
+    &__img {
+      @apply rounded-lg w-3/4 mx-auto rounded-[25px];
+      // &-wrapper {
+      // }
     }
-  }
 
-  &__social--space {
-    @apply ml-2;
+    &__social-btn-wrapper {
+      @apply flex items-center;
+    }
+
+    &__social-btns {
+      @apply flex justify-evenly p-2;
+      .btn-heart,
+      .btn-comment,
+      .btn-share,
+      .btn-stats {
+        @apply hover:transform hover:scale-125 cursor-pointer transition duration-200;
+      }
+
+      .btn-heart {
+        @apply hover:text-red-600;
+      }
+
+      .btn-comment {
+        @apply hover:text-yellow-600;
+      }
+
+      .btn-share {
+        @apply hover:text-blue-600;
+      }
+
+      .btn-stats {
+        @apply hover:text-green-600;
+      }
+    }
+
+    &__social--space {
+      @apply ml-2;
+    }
   }
 }

@@ -6,6 +6,44 @@ exports.login = asyncHandler(async (req, res, next) => {
     #swagger.tags = ['Auth']
     #swagger.summary = 'User login'
     #swagger.description = 'Endpoint for user login.'
+    #swagger.requestBody = {
+        required: true,
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'object',
+                    properties: {
+                        username: {
+                            type: 'string',
+                            description: 'Username of the user',
+                            required: true
+                        },
+                        password: {
+                            type: 'string',
+                            description: 'Password of the user',
+                            required: true
+                        }
+                    },
+                    required: ['username', 'password']
+                },
+                examples: {
+                    example1: {
+                        value: {
+                            username: 'newuser',
+                            password: 'newpassword123'
+                        }
+                    }
+                }
+            }
+        }
+    }
+    #swagger.responses[200] = {
+        description: 'Login successful',
+        schema: { success: true, token: 'JWT_TOKEN_HERE' }
+    }
+    #swagger.responses[400] = {
+        description: 'Missing credentials or invalid login details',
+    }
     */
     const { username, password } = req.body;
 
@@ -39,6 +77,41 @@ exports.signup = asyncHandler(async (req, res, next) => {
     #swagger.tags = ['Auth']
     #swagger.summary = 'User signup'
     #swagger.description = 'Endpoint for user registration.'
+    #swagger.requestBody = {
+    required: true,
+    content: {
+        'application/json': {
+            schema: {
+                type: 'object',
+                properties: {
+                    username: {
+                        type: 'string',
+                        description: 'Desired username for the new user account',
+                        required: true
+                    },
+                    password: {
+                        type: 'string',
+                        description: 'Desired password for the new user account',
+                        required: true
+                    }
+                },
+                required: ['username', 'password']
+            },
+            examples: {
+                example1: {
+                    value: {
+                        username: 'newuser',
+                        password: 'newpassword123'
+                    }
+                }
+            }
+        }
+    }
+    }
+    #swagger.responses[201] = {
+        description: 'User registration successful',
+        schema: { success: true, token: 'JWT_TOKEN_HERE' }
+    }
     */
     const { username, password } = req.body;
 
@@ -53,6 +126,25 @@ exports.me = asyncHandler(async (req, res, next) => {
     #swagger.tags = ['Auth']
     #swagger.summary = 'Get current user'
     #swagger.description = 'Endpoint to get the current logged-in user information.'
+    #swagger.security = [{ "bearerAuth": [] }]
+        #swagger.responses[200] = { 
+            description: 'User successfully retrieved.',
+            schema: { 
+                success: true, 
+                data: {
+                    $avatar: 'URL_to_avatar',
+                    $userxname: 'UserASDASDUsername',
+                    $fullname: 'User Fullname',
+                    $email: 'user@example.com',
+                    $_id: 'UserID',
+                    $website: 'http://userwebsite.com',
+                    $bio: 'User biography...'
+                }
+            }
+        }
+    #swagger.responses[403] = { 
+        description: 'Unauthorized. Token missing or invalid.'
+    }
     */
     const { avatar, username, fullname, email, _id, website, bio } = req.user;
 

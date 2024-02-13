@@ -1,12 +1,53 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./Aside.scss";
 import Profiles from "./Profiles/Profiles";
+import ToastWarning from "./ToastWarning/ToastWarning";
 
 const Aside = () => {
+  const [profileToSearch, setProfileToSearch] = useState("");
+  const [trendingProfiles, setTrendingProfiles] = useState({});
+  const navigate = useNavigate();
+
+  const handleProfileToSearch = (event) => {
+    setProfileToSearch(event.target.value);
+  };
+
+  const handleSearchProfile = (event) => {
+    event.preventDefault();
+    navigate(`/searchedProfiles/${profileToSearch}`);
+  };
+
+  const fetchTrendingProfiles = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/api/users/trending`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+
+      const result = response.data;
+      // console.log(result);
+      setTrendingProfiles(result.data.filter((profile) => !profile.isMe));
+    } catch (error) {
+      console.error("Wystąpił błąd przy pobieraniu danych:", error);
+      setTrendingProfiles({});
+    }
+  };
+
+  useEffect(() => {
+    fetchTrendingProfiles();
+  }, []);
+
   return (
     <aside className="aside">
       <div className="aside__wrapper">
-        <form className="search">
+        <form onSubmit={handleSearchProfile} className="search">
           <label htmlFor="default-search" className="search__label">
             Search
           </label>
@@ -29,6 +70,8 @@ const Aside = () => {
               </svg>
             </div>
             <input
+              onChange={handleProfileToSearch}
+              value={profileToSearch}
               type="search"
               id="default-search"
               className="search__input"
@@ -41,8 +84,13 @@ const Aside = () => {
           </div>
         </form>
 
-        <Profiles isAside={true} />
+        <Profiles
+          isAside={true}
+          trendingProfiles={trendingProfiles}
+          fetchTrendingProfiles={fetchTrendingProfiles}
+        />
       </div>
+      <ToastWarning />
     </aside>
   );
 };

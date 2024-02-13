@@ -7,16 +7,24 @@ const auth = require("./routes/auth");
 const docs = require("./routes/docs");
 const rateLimit = require("express-rate-limit");
 
+const errorHandler = require("./utils/errorHandler");
+
+
 const app = express();
 
 connectToDb();
 app.use(express.json());
 
-const apiLimiter = new rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minute
-    max: 100, // limit each IP to 100 requests per windowMs
-});
-app.use("/api/", apiLimiter);
+const isRateLimitEnabled = process.env.RATE_LIMIT_ENABLED || 'true';
+
+if (process.env.RATE_LIMIT_ENABLED === 'true') {
+    const apiLimiter = rateLimit({
+        windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
+        max: parseInt(process.env.RATE_LIMIT_MAX) || 100,
+    });
+
+    app.use("/api/", apiLimiter);
+}
 
 var corsOptions = {
     origin: process.env.URI || "http://localhost:3000",
@@ -34,6 +42,11 @@ app.get('/', (req, res) => {
     res.redirect('/api/docs');
 });
 
+app.use(express.static('public'));
+app.get('/api/avatar/default', (req, res) => {
+    res.sendFile('default_avatar.webp', { root: './public' });
+});
+
 // Wildcard route for handling 404 - Place this at the end
 app.all('*', (req, res) => {
     res.status(404).json({
@@ -41,5 +54,8 @@ app.all('*', (req, res) => {
         message: `There is no such endpoint.`
     });
 });
+
+app.use(errorHandler);
+
 
 module.exports = { app };
