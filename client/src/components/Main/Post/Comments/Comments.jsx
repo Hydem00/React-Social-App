@@ -29,6 +29,15 @@ const Comments = ({
                 <span className="comments__author-name">
                   {comment?.user?.username}
                 </span>
+                <div className="comments__img-wrapper">
+                  {comment?.files?.length > 0 && (
+                    <img
+                      className="comments__img"
+                      src={formatBase64Image(comment.files[0])}
+                      alt="Post content"
+                    />
+                  )}
+                </div>
               </Link>
             </div>
             <p className="comments__text" style={{ whiteSpace: "pre-wrap" }}>
