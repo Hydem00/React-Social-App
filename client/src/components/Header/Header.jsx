@@ -8,40 +8,48 @@ import { RiMessage2Fill } from "react-icons/ri";
 import { StoreContext } from "../store/StoreProvider";
 import profileUser from "../../assets/profile-user.png";
 import NotificationsMenu from "./NotificationsMenu/NotificationsMenu";
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const { profileInfo } = useContext(StoreContext);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNotificationsMenuOpen, setIsNotificationsMenuOpen] = useState(false);
 
-  const { setIsPublishPostActive, setIsSearchActive } =
-    useContext(StoreContext);
+    const navigate = useNavigate();
 
-  const handleOpenAddPostModal = () => {
-    setIsPublishPostActive(true);
-  };
+    const { setIsPublishPostActive, setIsSearchActive, setIsLoggedIn } =
+        useContext(StoreContext);
 
-  const handleOpenSearchModal = () => {
-    setIsSearchActive(true);
-  };
+    const handleOpenAddPostModal = () => {
+        setIsPublishPostActive(true);
+    };
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
+    const handleOpenSearchModal = () => {
+        setIsSearchActive(true);
+    };
 
-  const handleShowNotifications = () => {
-    setIsNotificationsMenuOpen((prevState) => !prevState);
-  };
+    const toggleDropdown = () => {
+        setIsDropdownOpen(!isDropdownOpen);
+    };
 
-  return (
-    <header className="header">
-      <nav className="nav-header">
-        <ul className="nav-header__list">
-          <Link to="/">
-            <li className="nav-header__item group">
-              <div className="nav-header__item-band nav-header__item-band--blue nav-header__item-band--move"></div>
-              <FaHome className="nav-header__item-icon nav-header__item-icon--blue " />
+    const handleShowNotifications = () => {
+        setIsNotificationsMenuOpen((prevState) => !prevState);
+    };
 
+    const handleLogout = () => {
+        setIsLoggedIn(false);
+        localStorage.removeItem("token");
+        navigate("/login");
+    };
+
+    return (
+        <header className="header">
+            <nav className="nav-header">
+                <ul className="nav-header__list">
+                    <Link to="/">
+                        <li className="nav-header__item group">
+                            <div className="nav-header__item-band nav-header__item-band--blue nav-header__item-band--move"></div>
+                            <FaHome className="nav-header__item-icon nav-header__item-icon--blue " />
               <p className="nav-header__item-text nav-header__item-text--blue">
                 Home
               </p>
@@ -147,11 +155,11 @@ const Header = () => {
             <span className="nav-header__item-text nav-header__item-text--gray">
               Profile
             </span> */}
-          </li>
-        </ul>
-      </nav>
-    </header>
-  );
+                    </li>
+                </ul>
+            </nav>
+        </header>
+    );
 };
 
 export default Header;

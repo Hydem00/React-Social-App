@@ -2,11 +2,16 @@ import React, { useContext, useEffect, useState } from "react";
 import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
 import Aside from "./components/Aside/Aside";
+import View from "./View";
 import "./App.scss";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Modal from "./components/Modal/Modal";
 import { StoreContext } from "./components/store/StoreProvider";
 import axios from "axios";
+
+//
+import Login from "./components/Main/Auth/Login";
+import Register from "./components/Main/Auth/Register";
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,15 +25,15 @@ function App() {
     setIsSearchActive,
   } = useContext(StoreContext);
 
-  const handleModal = () => {
-    setIsModalOpen(true);
-  };
+    const handleModal = () => {
+        setIsModalOpen(true);
+    };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setIsPublishPostActive(false);
-    setIsSearchActive(false);
-  };
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setIsPublishPostActive(false);
+        setIsSearchActive(false);
+    };
 
   const getProfileData = async () => {
     try {
@@ -65,18 +70,17 @@ function App() {
     }
   }, [isPublishPostActive, isSearchActive]);
 
-  return (
-    <div className="App">
-      <div className="wrapper">
-        <Router>
-          <Header openModal={handleModal} />
-          <Main />
-          <Aside />
-          <Modal isOpen={isModalOpen} onClose={handleCloseModal} />
-        </Router>
-      </div>
-    </div>
-  );
+    return (
+        <div className="App">
+            <Router>
+                <Routes>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="*" element={<View />} />
+                </Routes>
+            </Router>
+        </div>
+    );
 }
 
 export default App;

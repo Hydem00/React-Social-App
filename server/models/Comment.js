@@ -16,6 +16,10 @@ const CommentSchema = new mongoose.Schema({
         required: [true, "Please enter the comment"],
         trim: true,
     },
+    files: {
+        type: [String],
+        validate: (v) => v === null || v.length > 0,
+    },
     createdAt: {
         type: Date,
         default: Date.now,

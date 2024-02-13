@@ -4,10 +4,12 @@ import axios from "axios";
 export const StoreContext = createContext(null);
 
 const StoreProvider = ({ children }) => {
+
   const [profileInfo, setProfileInfo] = useState({});
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [isPublishPostActive, setIsPublishPostActive] = useState(false);
   const [isPostWarningActive, setIsPostWarningActive] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleToggleFollow = async (id, followToggle, fetchFun) => {
     try {
@@ -41,6 +43,8 @@ const StoreProvider = ({ children }) => {
         isPostWarningActive,
         setIsPostWarningActive,
         handleToggleFollow,
+        isLoggedIn,
+        setIsLoggedIn
       }}
     >
       {children}

@@ -222,6 +222,7 @@ exports.addComment = asyncHandler(async (req, res, next) => {
         user: req.user.id,
         post: req.params.id,
         text: req.body.text,
+        files: req.body.files,
     });
 
     post.comments.push(comment._id);
