@@ -18,7 +18,7 @@ const CommentSchema = new mongoose.Schema({
     },
     files: {
         type: [String],
-        validate: (v) => v === null || v.length > 0,
+        trim: true,
     },
     createdAt: {
         type: Date,
