@@ -83,6 +83,7 @@ const TextEditor = ({
           `http://localhost:3001/api/posts/${id}/comments`,
           {
             text: textareaText,
+            files: "",
           },
           {
             headers: {
