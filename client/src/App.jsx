@@ -7,19 +7,23 @@ import "./App.scss";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Modal from "./components/Modal/Modal";
 import { StoreContext } from "./components/store/StoreProvider";
+import axios from "axios";
 
 //
 import Login from "./components/Main/Auth/Login";
 import Register from "./components/Main/Auth/Register";
 
 function App() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const {
-        isPublishPostActive,
-        setIsPublishPostActive,
-        isSearchActive,
-        setIsSearchActive,
-    } = useContext(StoreContext);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const {
+    setProfileInfo,
+    profileInfo,
+    isPublishPostActive,
+    setIsPublishPostActive,
+    isSearchActive,
+    setIsSearchActive,
+  } = useContext(StoreContext);
 
     const handleModal = () => {
         setIsModalOpen(true);
@@ -31,13 +35,40 @@ function App() {
         setIsSearchActive(false);
     };
 
-    useEffect(() => {
-        if (isPublishPostActive || isSearchActive) {
-            handleModal();
-        } else {
-            handleCloseModal();
-        }
-    }, [isPublishPostActive, isSearchActive]);
+  const getProfileData = async () => {
+    try {
+      const response = await axios.get("http://localhost:3001/api/auth/me", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      });
+
+      const result = response.data;
+      // console.log(result);
+      return result;
+    } catch (error) {
+      console.error("There was a problem with the axios operation:", error);
+    }
+  };
+
+  useEffect(() => {
+    getProfileData()
+      .then(({ data }) => {
+        setProfileInfo(data);
+      })
+      .catch((error) => {
+        console.error("Error getting data:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (isPublishPostActive || isSearchActive) {
+      handleModal();
+    } else {
+      handleCloseModal();
+    }
+  }, [isPublishPostActive, isSearchActive]);
 
     return (
         <div className="App">

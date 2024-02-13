@@ -1,7 +1,7 @@
 @import "../../mixins.scss";
 
 .profiles {
-  @apply flex flex-wrap w-full rounded-lg overflow-hidden text-white bg-[#16181C];
+  @apply flex flex-wrap w-full h-full rounded-lg overflow-hidden text-white bg-[#16181C];
 
   &--separate-subpage {
     @apply bg-transparent border border-[#2F3336];
@@ -12,10 +12,14 @@
   }
 
   .profile {
-    @apply w-full flex flex-wrap items-center justify-center;
+    @apply w-full flex flex-wrap items-center justify-center bg-[#16181C];
+
+    &--modal {
+      @apply rounded-[20px] my-2;
+    }
 
     &__icon {
-      @apply h-16 p-2;
+      @apply h-16 p-2 rounded-full;
     }
 
     &__name {
@@ -24,6 +28,9 @@
 
     &__follow-btn {
       @include follow-btn;
+      &--followed {
+        @apply text-white bg-[#16181C] border-1;
+      }
     }
 
     &__description {

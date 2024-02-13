@@ -1,5 +1,9 @@
-.comment {
+.comments {
   @apply border-t border-[#2F3336];
+
+  .comment {
+    @apply border-b-1 border-[#2F3336];
+  }
 
   &__author {
     @apply flex p-4 mt-4;
@@ -9,7 +13,7 @@
   }
 
   &__profile-icon {
-    @apply w-12;
+    @apply rounded-full w-12;
   }
 
   &__text {
